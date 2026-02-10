@@ -1,0 +1,54 @@
+# Petshop Mobile App - Product Requirements Document (PRD)
+
+## 1. Introduction
+This document outlines the requirements for a mobile application designed to manage a Petshop's daily operations. The app will handle client/pet registration, appointment scheduling, and monthly payment tracking.
+
+## 2. Problem Statement
+Managing pet information, appointments, and payments manually (paper/spreadsheets) is inefficient and prone to errors. A dedicated mobile app will streamline these processes.
+
+## 3. Goals
+- Centralize customer and pet data.
+- Simplify appointment scheduling.
+- Track monthly payments and identify overdue accounts.
+- Provide a clean, modern user interface.
+
+## 4. User Personas
+- **Shop Manager/Owner**: Needs full access to manage clients, pets, schedule, and finances.
+- **Staff (Optional/Future)**: May need access to view schedule.
+
+## 5. Functional Requirements
+
+### 5.1. Customer & Pet Management (CRUD)
+- **Owners**:
+  - Register new owners (Name, Phone, Address).
+  - Edit/Delete owner details.
+  - List all owners with search capability.
+- **Pets**:
+  - Register new pets linked to an Owner (Name, Breed, Age, Notes).
+  - Edit/Delete pet details.
+  - View pet history (past appointments).
+
+### 5.2. Agenda / Scheduling
+- **Appointments**:
+  - Create new appointment (Date, Time, Pet, Service Type, Notes).
+  - View daily/weekly schedule.
+  - Edit/Cancel appointments.
+  - Status tracking (Scheduled, Completed, Cancelled).
+
+### 5.3. Financial Control
+- **Monthly Payments**:
+  - Track monthly fees for recurring clients (e.g., daycare/walking packages).
+  - Record individual service payments.
+  - Dashboard for overdue payments.
+  - Payment history per client.
+
+## 6. Non-Functional Requirements
+- **Platform**: iOS and Android (via Expo).
+- **Performance**: Fast load times, smooth transitions.
+- **Data Persistence**: Robust local database (SQLite) with potential for cloud sync.
+- **UI/UX**: Modern, intuitive interface with "premium" feel (as per guidelines).
+
+## 7. Future Scope
+- Push notifications for appointment reminders.
+- Cloud synchronization/Backup.
+- Client-facing app for owners to book appointments directly.
