@@ -3,8 +3,8 @@ import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 export const owners = sqliteTable('owners', {
     id: integer('id').primaryKey({ autoIncrement: true }),
     name: text('name').notNull(),
-    phone: text('phone'),
-    address: text('address'),
+    phone: text('phone').notNull(),
+    address: text('address').notNull(),
     createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 

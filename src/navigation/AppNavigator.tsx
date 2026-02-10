@@ -1,9 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Users, Calendar, DollarSign } from 'lucide-react-native';
+import { Home, Users, Calendar, DollarSign, Dog } from 'lucide-react-native';
 import { RootTabParamList } from './types';
 import { HomeStack } from './stacks/HomeStack';
 import { ClientsStack } from './stacks/ClientsStack';
+import { PetsStack } from './stacks/PetsStack';
 import { AgendaStack } from './stacks/AgendaStack';
 import { FinanceStack } from './stacks/FinanceStack';
 import { Colors } from '../constants/Colors';
@@ -42,8 +43,16 @@ export const AppNavigator = () => (
             name="Clients"
             component={ClientsStack}
             options={{
-                tabBarLabel: 'Clientes',
+                tabBarLabel: 'Tutores',
                 tabBarIcon: ({ color, size }) => <Users size={size} color={color} />,
+            }}
+        />
+        <Tab.Screen
+            name="Pets"
+            component={PetsStack}
+            options={{
+                tabBarLabel: 'Pets',
+                tabBarIcon: ({ color, size }) => <Dog size={size} color={color} />,
             }}
         />
         <Tab.Screen

@@ -20,7 +20,7 @@ Managing pet information, appointments, and payments manually (paper/spreadsheet
 
 ### 5.1. Customer & Pet Management (CRUD)
 - **Owners**:
-  - Register new owners (Name, Phone, Address).
+  - Register new owners (Name*, Phone*, Address*).
   - Edit/Delete owner details.
   - List all owners with search capability.
 - **Pets**:

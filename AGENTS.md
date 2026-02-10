@@ -7,7 +7,7 @@ This document provides instructions and constraints for AI agents working on thi
 - **Type Safety**: Use TypeScript for all code. Avoid `any`. Define interfaces in `src/types`.
 - **Local-First**: The app uses SQLite via Drizzle ORM. All data persistence must go through `src/storage`.
 - **Business Logic Separation**: Keep business logic in `src/services`. Screens should only handle UI and call services.
-- **Premium UI**: UI components must follow a consistent, high-quality design pattern. Use `src/components/ui` for shared base components.
+- **Premium UI**: UI components must follow a consistent, high-quality design pattern. Refer to `docs/design_system.md` for the full specification. Use `src/components/ui` for shared base components. Always use `AppText` instead of `Text`.
 
 ## 2. Directory Structure Rules
 Agents MUST strictly adhere to the following structure:

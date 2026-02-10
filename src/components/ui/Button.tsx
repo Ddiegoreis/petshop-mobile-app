@@ -5,7 +5,7 @@ import { AppText } from './Typography';
 
 interface AppButtonProps extends TouchableOpacityProps {
     title: string;
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
     loading?: boolean;
 }
 
@@ -64,6 +64,9 @@ const styles = StyleSheet.create({
     },
     secondary: {
         backgroundColor: Colors.light.secondary,
+    },
+    danger: {
+        backgroundColor: Colors.light.danger,
     },
     outline: {
         backgroundColor: 'transparent',

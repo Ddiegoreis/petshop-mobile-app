@@ -23,7 +23,7 @@ export const Colors = {
         tertiaryDark: '#0E918F',  // Deep teal — text on light surfaces
 
         // Surfaces
-        background: '#FEFEDF',    // Warm Cream — app background
+        background: '#fef3ff',    // Warm Cream — app background
         surface: '#FFFFFF',       // White — cards, modals
         surfaceAlt: '#FFF5F9',    // Pinkish white — alternate surface (e.g. selected)
 
@@ -40,6 +40,7 @@ export const Colors = {
         // Semantic
         success: '#14BEBB',       // Teal — success states
         error: '#D32F2F',         // Red — errors
+        danger: '#E94560',        // Premium attention color
         warning: '#F5A623',       // Amber — warnings
         info: '#AB27A7',          // Purple — informational
 
@@ -78,6 +79,7 @@ export const Colors = {
         // Semantic
         success: '#5DD9D6',
         error: '#EF5350',
+        danger: '#FF4D6D',
         warning: '#FFB74D',
         info: '#D157CD',
 

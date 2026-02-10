@@ -26,6 +26,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@react-native-picker/picker": "^2.11.4",
     "@types/react": "~19.1.0",
     "@types/react-native": "^0.73.0",
     "babel-plugin-inline-import": "^3.0.0",
