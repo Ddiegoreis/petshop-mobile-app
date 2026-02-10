@@ -16,6 +16,12 @@ export const HomeScreen = () => {
                     <AppText variant="body" color={Colors.light.textMuted}>Bem-vindo de volta!</AppText>
                 </View>
 
+                <AppCard padding="lg" style={styles.cta}>
+                    <AppText variant="h3">Atendimento de Hoje</AppText>
+                    <AppText variant="caption" style={{ marginBottom: Spacing.md }}>Nenhum atendimento agendado para hoje.</AppText>
+                    <AppButton title="Agendar Novo" variant="primary" />
+                </AppCard>
+
                 <View style={styles.grid}>
                     <AppCard style={styles.menuItem}>
                         <Users size={32} color={Colors.light.primary} />
@@ -37,12 +43,6 @@ export const HomeScreen = () => {
                         <AppText variant="h3" style={styles.menuLabel}>Pagamentos</AppText>
                     </AppCard>
                 </View>
-
-                <AppCard padding="lg" style={styles.cta}>
-                    <AppText variant="h3">Atendimento de Hoje</AppText>
-                    <AppText variant="caption" style={{ marginBottom: Spacing.md }}>Nenhum atendimento agendado para hoje.</AppText>
-                    <AppButton title="Agendar Novo" variant="primary" />
-                </AppCard>
             </ScrollView>
         </SafeAreaView>
     );

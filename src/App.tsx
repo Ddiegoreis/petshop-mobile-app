@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
 import { useDatabase } from './hooks/useDatabase';
-import { HomeScreen } from './screens/Home/HomeScreen';
+import { AppNavigator } from './navigation/AppNavigator';
 import { Colors } from './constants/Colors';
 import { AppText } from './components/ui/Typography';
 
@@ -33,8 +34,10 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <HomeScreen />
-      <StatusBar style="auto" />
+      <NavigationContainer>
+        <AppNavigator />
+        <StatusBar style="auto" />
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
