@@ -123,7 +123,7 @@ export const AddEditPetScreen = () => {
                             <Picker
                                 selectedValue={selectedOwnerId}
                                 onValueChange={(itemValue: number | undefined) => setSelectedOwnerId(itemValue)}
-                                enabled={!initialOwnerId} // Disable if owner was passed via route
+                                enabled={!initialOwnerId || isEditing}
                                 style={styles.picker}
                             >
                                 <Picker.Item label="Selecione um tutor..." value={undefined} />
@@ -133,7 +133,7 @@ export const AddEditPetScreen = () => {
                             </Picker>
                         </View>
                         {errors.owner && <AppText variant="caption" color={Colors.light.error}>{errors.owner}</AppText>}
-                        {initialOwnerId && <AppText variant="caption" color={Colors.light.textMuted} style={{ marginTop: 4 }}>Tutor fixado pelo contexto.</AppText>}
+                        {(!isEditing && initialOwnerId) && <AppText variant="caption" color={Colors.light.textMuted} style={{ marginTop: 4 }}>Tutor fixado pelo contexto.</AppText>}
                     </View>
 
                     <AppInput

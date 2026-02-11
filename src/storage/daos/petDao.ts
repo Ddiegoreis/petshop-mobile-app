@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, getTableColumns } from 'drizzle-orm';
 import { db } from '../database/connection';
 import { pets, owners, type Pet, type NewPet } from '../schema';
 
@@ -8,7 +8,7 @@ export const petDao = {
     async getAll(): Promise<PetWithOwner[]> {
         const result = await db
             .select({
-                ...pets._.columns,
+                ...getTableColumns(pets),
                 ownerName: owners.name,
             })
             .from(pets)
@@ -27,7 +27,7 @@ export const petDao = {
     async getById(id: number): Promise<PetWithOwner | undefined> {
         const result = await db
             .select({
-                ...pets._.columns,
+                ...getTableColumns(pets),
                 ownerName: owners.name,
             })
             .from(pets)

@@ -70,7 +70,7 @@ export const ClientsListScreen = () => {
                     <View style={styles.cardActions}>
                         <TouchableOpacity
                             style={styles.petsBtn}
-                            onPress={() => Alert.alert('Em breve', 'Gerenciamento de pets será implementado em breve.')}
+                            onPress={() => navigation.navigate('PetsList', { ownerId: item.id })}
                         >
                             <PawPrint size={16} color={Colors.light.primary} />
                             <AppText variant="caption" color={Colors.light.primary} style={{ marginLeft: 4, fontWeight: '600' }}>
