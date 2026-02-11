@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Plus, Search, ChevronRight, PawPrint } from 'lucide-react-native';
+import { Plus, Search, ChevronRight, PawPrint, ArrowLeft } from 'lucide-react-native';
 import { AppText } from '../../components/ui/Typography';
 import { AppCard } from '../../components/ui/Card';
 import { Colors, Spacing } from '../../constants/Colors';
@@ -150,7 +150,14 @@ export const PetsListScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <AppText variant="h1">Pets</AppText>
+                <View style={styles.headerTop}>
+                    {filterOwnerId && (
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+                            <ArrowLeft size={24} color={Colors.light.text} />
+                        </TouchableOpacity>
+                    )}
+                    <AppText variant="h1">Pets</AppText>
+                </View>
                 {filterOwnerId && <AppText variant="caption">Deste tutor</AppText>}
             </View>
 
@@ -188,6 +195,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: Spacing.lg,
         paddingTop: Spacing.md,
         paddingBottom: Spacing.sm,
+    },
+    headerTop: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+    },
+    backBtn: {
+        padding: 4,
+        marginLeft: -4,
     },
     searchContainer: {
         flexDirection: 'row',

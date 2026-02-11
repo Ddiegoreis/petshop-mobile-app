@@ -31,8 +31,10 @@ Managing pet information, appointments, and payments manually (paper/spreadsheet
 ### 5.2. Agenda / Scheduling
 - **Appointments**:
   - Create new appointment (Date, Time, Pet, Service Type, Notes).
+  - **Recurrence**: Support creating recurring appointments (Weekly, Bi-weekly, Monthly).
+  - **Calendar Sync**: Option to synchronize appointments with the device's native calendar.
   - View daily/weekly schedule.
-  - Edit/Cancel appointments.
+  - Edit/Cancel appointments (support for single instance or series in future).
   - Status tracking (Scheduled, Completed, Cancelled).
 
 ### 5.3. Financial Control

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, TouchableOpacityProps, StyleSheet, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, TouchableOpacityProps, StyleSheet, ActivityIndicator, StyleProp, TextStyle } from 'react-native';
 import { Colors, Spacing } from '../../constants/Colors';
 import { AppText } from './Typography';
 
@@ -7,6 +7,7 @@ interface AppButtonProps extends TouchableOpacityProps {
     title: string;
     variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
     loading?: boolean;
+    textStyle?: StyleProp<TextStyle>;
 }
 
 export const AppButton: React.FC<AppButtonProps> = ({
@@ -14,6 +15,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
     variant = 'primary',
     loading,
     style,
+    textStyle,
     disabled,
     ...props
 }) => {
@@ -40,7 +42,8 @@ export const AppButton: React.FC<AppButtonProps> = ({
                     style={[
                         styles.text,
                         { color: isOutline || isGhost ? Colors.light.primary : '#FFF' },
-                        { fontWeight: '600' }
+                        { fontWeight: '600' },
+                        textStyle
                     ]}
                 >
                     {title}

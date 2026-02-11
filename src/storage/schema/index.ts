@@ -20,11 +20,13 @@ export const pets = sqliteTable('pets', {
 export const appointments = sqliteTable('appointments', {
     id: integer('id').primaryKey({ autoIncrement: true }),
     petId: integer('pet_id').notNull().references(() => pets.id, { onDelete: 'cascade' }),
-    date: integer('date', { mode: 'timestamp' }).notNull(),
-    serviceType: text('service_type').notNull(), // e.g., 'Bath', 'Grooming', 'Walk'
-    status: text('status', { enum: ['scheduled', 'completed', 'cancelled'] }).notNull().$default(() => 'scheduled'),
+    date: text('date').notNull(), // ISO 8601 string
+    serviceType: text('service_type').notNull(),
     notes: text('notes'),
-    price: real('price'),
+    status: text('status').notNull().default('PENDING'), // PENDING, COMPLETED, CANCELLED
+    calendarEventId: text('calendar_event_id'),
+    recurrenceRule: text('recurrence_rule'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 export const payments = sqliteTable('payments', {

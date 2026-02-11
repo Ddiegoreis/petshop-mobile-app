@@ -17,8 +17,9 @@ export type ClientsStackParamList = {
 
 // ─── Agenda Stack ─────────────────────────────────────────
 export type AgendaStackParamList = {
-    AgendaScreen: undefined;
-    AddEditAppointment: { appointmentId?: number; petId?: number };
+    AgendaList: undefined;
+    AddAppointment: { date?: string; petId?: number };
+    AppointmentDetail: { appointmentId: number };
 };
 
 // ─── Finance Stack ────────────────────────────────────────

@@ -17,6 +17,7 @@ import { AppButton } from '../../components/ui/Button';
 import { Colors, Spacing } from '../../constants/Colors';
 import { ownerDao } from '../../storage/daos/ownerDao';
 import { ClientsStackParamList } from '../../navigation/types';
+import { formatPhone } from '../../utils/format';
 
 type Route = RouteProp<ClientsStackParamList, 'AddEditClient'>;
 
@@ -59,6 +60,16 @@ export const AddEditClientScreen = () => {
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
+    };
+
+
+
+    const handlePhoneChange = (text: string) => {
+        const formatted = formatPhone(text);
+        if (formatted.length <= 15) { // (XX) XXXXX-XXXX = 15 chars
+            setPhone(formatted);
+            if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
+        }
     };
 
     const handleSave = async () => {
@@ -118,12 +129,10 @@ export const AddEditClientScreen = () => {
                         label="Telefone *"
                         placeholder="(00) 00000-0000"
                         value={phone}
-                        onChangeText={(text) => {
-                            setPhone(text);
-                            if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
-                        }}
+                        onChangeText={handlePhoneChange}
                         error={errors.phone}
                         keyboardType="phone-pad"
+                        maxLength={15}
                     />
 
                     <AppInput
