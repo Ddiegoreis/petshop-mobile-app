@@ -6,6 +6,7 @@ export type AppointmentWithDetails = Appointment & {
     petName: string;
     ownerName: string;
     ownerId: number;
+    isClubinho: boolean;
 };
 
 export const appointmentDao = {
@@ -30,6 +31,7 @@ export const appointmentDao = {
                 petName: pets.name,
                 ownerName: owners.name,
                 ownerId: owners.id,
+                isClubinho: owners.isClubinho,
             })
             .from(appointments)
             .leftJoin(pets, eq(appointments.petId, pets.id))
@@ -47,6 +49,7 @@ export const appointmentDao = {
                 petName: pets.name,
                 ownerName: owners.name,
                 ownerId: owners.id,
+                isClubinho: owners.isClubinho,
             })
             .from(appointments)
             .leftJoin(pets, eq(appointments.petId, pets.id))

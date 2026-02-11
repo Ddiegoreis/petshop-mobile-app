@@ -7,6 +7,7 @@ import {
     Alert,
     KeyboardAvoidingView,
     Platform,
+    Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -30,6 +31,7 @@ export const AddEditClientScreen = () => {
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [isClubinho, setIsClubinho] = useState(false);
     const [errors, setErrors] = useState<{ name?: string; phone?: string; address?: string }>({});
     const [saving, setSaving] = useState(false);
 
@@ -41,6 +43,7 @@ export const AddEditClientScreen = () => {
                     setName(owner.name);
                     setPhone(owner.phone);
                     setAddress(owner.address);
+                    setIsClubinho(owner.isClubinho);
                 }
             };
             load();
@@ -82,12 +85,14 @@ export const AddEditClientScreen = () => {
                     name: name.trim(),
                     phone: phone.trim(),
                     address: address.trim(),
+                    isClubinho,
                 });
             } else {
                 await ownerDao.create({
                     name: name.trim(),
                     phone: phone.trim(),
                     address: address.trim(),
+                    isClubinho,
                 });
             }
             navigation.goBack();
@@ -147,6 +152,18 @@ export const AddEditClientScreen = () => {
                         multiline
                     />
 
+                    <View style={styles.switchRow}>
+                        <View>
+                            <AppText variant="body" style={{ fontWeight: '600' }}>Clubinho</AppText>
+                            <AppText variant="caption" color={Colors.light.textMuted}>Cliente Premium</AppText>
+                        </View>
+                        <Switch
+                            value={isClubinho}
+                            onValueChange={setIsClubinho}
+                            trackColor={{ false: Colors.light.border, true: Colors.light.primary }}
+                        />
+                    </View>
+
                     <View style={styles.actions}>
                         <AppButton
                             title={isEditing ? 'Salvar Alterações' : 'Cadastrar Tutor'}
@@ -189,5 +206,16 @@ const styles = StyleSheet.create({
     },
     actions: {
         marginTop: Spacing.lg,
+    },
+    switchRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: Spacing.md,
+        padding: Spacing.md,
+        backgroundColor: Colors.light.surface,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: Colors.light.border,
     },
 });

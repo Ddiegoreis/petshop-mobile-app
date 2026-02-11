@@ -5,6 +5,7 @@ export const owners = sqliteTable('owners', {
     name: text('name').notNull(),
     phone: text('phone').notNull(),
     address: text('address').notNull(),
+    isClubinho: integer('is_clubinho', { mode: 'boolean' }).notNull().default(false),
     createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 

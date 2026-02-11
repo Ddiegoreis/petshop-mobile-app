@@ -1,0 +1,1 @@
+ALTER TABLE `owners` ADD `is_clubinho` integer DEFAULT false NOT NULL;

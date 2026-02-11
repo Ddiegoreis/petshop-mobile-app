@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Plus, Search, Phone, ChevronRight, PawPrint } from 'lucide-react-native';
+import { Plus, Search, Phone, ChevronRight, PawPrint, Crown } from 'lucide-react-native';
 import { AppText } from '../../components/ui/Typography';
 import { AppCard } from '../../components/ui/Card';
 import { Colors, Spacing } from '../../constants/Colors';
@@ -57,6 +57,15 @@ export const ClientsListScreen = () => {
                 <View style={styles.cardContent}>
                     <View style={styles.cardInfo}>
                         <AppText variant="h3" style={styles.ownerName}>{item.name}</AppText>
+
+                        <View style={styles.tagsRow}>
+                            {item.isClubinho && (
+                                <View style={styles.clubinhoTag}>
+                                    <Crown size={12} color={Colors.light.primary} />
+                                    <AppText variant="caption" style={styles.clubinhoTagText}>Clubinho</AppText>
+                                </View>
+                            )}
+                        </View>
                         {item.phone && (
                             <View style={styles.phoneRow}>
                                 <Phone size={14} color={Colors.light.textMuted} />
@@ -179,10 +188,32 @@ const styles = StyleSheet.create({
     ownerName: {
         fontSize: 18,
     },
+    tagsRow: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 6,
+        marginTop: 4,
+    },
+    clubinhoTag: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: Colors.light.surfaceAlt,
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 6,
+        gap: 4,
+        borderWidth: 1,
+        borderColor: Colors.light.primary + '33',
+    },
+    clubinhoTagText: {
+        color: Colors.light.primary,
+        fontSize: 11,
+        fontWeight: '700',
+    },
     phoneRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 4,
+        marginTop: 6,
     },
     cardActions: {
         flexDirection: 'row',

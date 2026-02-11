@@ -6,7 +6,7 @@ import { AppText } from '../../components/ui/Typography';
 import { AppCard } from '../../components/ui/Card';
 import { AppButton } from '../../components/ui/Button';
 import { Colors, Spacing } from '../../constants/Colors';
-import { Dog, Users, Clock } from 'lucide-react-native';
+import { Dog, Users, Clock, Crown } from 'lucide-react-native';
 import { appointmentDao, AppointmentWithDetails } from '../../storage/daos/appointmentDao';
 
 export const HomeScreen = () => {
@@ -62,9 +62,16 @@ export const HomeScreen = () => {
                                             <Clock size={12} color={Colors.light.textSecondary} />
                                             <AppText variant="caption" style={{ marginLeft: 4 }}>{time}</AppText>
                                         </View>
-                                        <AppText variant="body" style={{ fontWeight: '600' }} numberOfLines={1}>
-                                            {app.petName} <AppText variant="caption" color={Colors.light.textMuted}>({app.serviceType})</AppText>
-                                        </AppText>
+                                        <View style={styles.nameRow}>
+                                            <AppText variant="body" style={{ fontWeight: '600' }} numberOfLines={1}>
+                                                {app.petName} <AppText variant="caption" color={Colors.light.textMuted}>({app.serviceType})</AppText>
+                                            </AppText>
+                                            {app.isClubinho && (
+                                                <View style={styles.clubinhoBadge}>
+                                                    <Crown size={10} color="#FFF" />
+                                                </View>
+                                            )}
+                                        </View>
                                     </View>
                                 );
                             })}
@@ -157,5 +164,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginRight: 12,
         width: 60,
+    },
+    nameRow: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+    },
+    clubinhoBadge: {
+        backgroundColor: Colors.light.primary,
+        padding: 2,
+        borderRadius: 10,
     },
 });

@@ -8,6 +8,13 @@
       "when": 1770837325081,
       "tag": "0000_init_fix_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1770845671737,
+      "tag": "0001_handy_the_phantom",
+      "breakpoints": true
     }
   ]
 }

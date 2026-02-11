@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Calendar, DateData } from 'react-native-calendars';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Plus } from 'lucide-react-native';
+import { Plus, Crown } from 'lucide-react-native';
 import { AppText } from '../../components/ui/Typography';
 import { Colors, Spacing } from '../../constants/Colors';
 import { appointmentDao, AppointmentWithDetails } from '../../storage/daos/appointmentDao';
@@ -61,6 +61,12 @@ export const AgendaScreen = () => {
                     <AppText variant="body" color={Colors.light.textSecondary}>{item.serviceType}</AppText>
                     <View style={styles.ownerRow}>
                         <AppText variant="caption" color={Colors.light.textMuted}>{item.ownerName}</AppText>
+                        {item.isClubinho && (
+                            <View style={styles.clubinhoBadge}>
+                                <Crown size={10} color="#FFF" />
+                                <AppText style={styles.clubinhoText}>Clubinho</AppText>
+                            </View>
+                        )}
                     </View>
                 </View>
             </TouchableOpacity>
@@ -85,6 +91,8 @@ export const AgendaScreen = () => {
                 <Calendar
                     onDayPress={(day: DateData) => setSelectedDate(day.dateString)}
                     markedDates={markedDates}
+                    showSixWeeks={true}
+                    enableSwipeMonths={true}
                     theme={{
                         backgroundColor: Colors.light.background,
                         calendarBackground: Colors.light.background,
@@ -197,6 +205,23 @@ const styles = StyleSheet.create({
     },
     ownerRow: {
         marginTop: 4,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+    },
+    clubinhoBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: Colors.light.primary,
+        paddingHorizontal: 6,
+        paddingVertical: 1,
+        borderRadius: 10,
+        gap: 3,
+    },
+    clubinhoText: {
+        color: '#FFF',
+        fontSize: 9,
+        fontWeight: 'bold',
     },
     emptyContainer: {
         paddingTop: 40,
