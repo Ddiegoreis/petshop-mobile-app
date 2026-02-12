@@ -135,7 +135,7 @@ export const AddEditPetScreen = () => {
                             >
                                 <Picker.Item label="Selecione um tutor..." value={undefined} color={theme.textMuted} />
                                 {owners.map((owner) => (
-                                    <Picker.Item key={owner.id} label={owner.name} value={owner.id} color={theme.text} />
+                                    <Picker.Item key={owner.id} label={owner.name} value={owner.id} color={theme.textMuted} />
                                 ))}
                             </Picker>
                         </View>

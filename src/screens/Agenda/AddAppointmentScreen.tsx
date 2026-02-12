@@ -11,7 +11,7 @@ import { ArrowLeft } from 'lucide-react-native';
 import { AppText } from '../../components/ui/Typography';
 import { AppButton } from '../../components/ui/Button';
 import { AppInput } from '../../components/ui/Input';
-import { Colors, Spacing } from '../../constants/Colors';
+import { Spacing } from '../../constants/Colors';
 import { appointmentDao } from '../../storage/daos/appointmentDao';
 import { ownerDao } from '../../storage/daos/ownerDao';
 import { petDao } from '../../storage/daos/petDao';
@@ -133,6 +133,7 @@ export const AddAppointmentScreen = () => {
         }
 
         setLoading(true);
+
         try {
             const fullDateObj = new Date(`${dateStr}T${timeStr}:00`);
             const appointmentsToCreate = generateInstances(fullDateObj);
@@ -186,7 +187,7 @@ export const AddAppointmentScreen = () => {
                             dropdownIconColor={theme.primary}
                         >
                             <Picker.Item label="Selecione..." value={undefined} color={theme.textMuted} />
-                            {owners.map(o => <Picker.Item key={o.id} label={o.name} value={o.id} color={theme.text} />)}
+                            {owners.map(o => <Picker.Item key={o.id} label={o.name} value={o.id} color={theme.textMuted} />)}
                         </Picker>
                     </View>
                 </View>
@@ -203,7 +204,7 @@ export const AddAppointmentScreen = () => {
                             dropdownIconColor={theme.primary}
                         >
                             <Picker.Item label="Selecione..." value={undefined} color={theme.textMuted} />
-                            {pets.map(p => <Picker.Item key={p.id} label={p.name} value={p.id} color={theme.text} />)}
+                            {pets.map(p => <Picker.Item key={p.id} label={p.name} value={p.id} color={theme.textMuted} />)}
                         </Picker>
                     </View>
                 </View>
@@ -246,10 +247,10 @@ export const AddAppointmentScreen = () => {
                             style={[styles.picker, { color: theme.text }]}
                             dropdownIconColor={theme.primary}
                         >
-                            <Picker.Item label="Não repetir" value="NONE" color={theme.text} />
-                            <Picker.Item label="Semanal" value="WEEKLY" color={theme.text} />
-                            <Picker.Item label="Quinzenal" value="BIWEEKLY" color={theme.text} />
-                            <Picker.Item label="Mensal" value="MONTHLY" color={theme.text} />
+                            <Picker.Item label="Não repetir" value="NONE" color={theme.textMuted} />
+                            <Picker.Item label="Semanal" value="WEEKLY" color={theme.textMuted} />
+                            <Picker.Item label="Quinzenal" value="BIWEEKLY" color={theme.textMuted} />
+                            <Picker.Item label="Mensal" value="MONTHLY" color={theme.textMuted} />
                         </Picker>
                     </View>
                 </View>
