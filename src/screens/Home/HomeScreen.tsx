@@ -8,8 +8,10 @@ import { AppButton } from '../../components/ui/Button';
 import { Colors, Spacing } from '../../constants/Colors';
 import { Dog, Users, Clock, Crown } from 'lucide-react-native';
 import { appointmentDao, AppointmentWithDetails } from '../../storage/daos/appointmentDao';
+import { useTheme } from '../../hooks/useTheme';
 
 export const HomeScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation<any>();
     const [todayAppointments, setTodayAppointments] = React.useState<AppointmentWithDetails[]>([]);
     const [loading, setLoading] = React.useState(true);
@@ -40,11 +42,11 @@ export const HomeScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView contentContainerStyle={styles.scroll}>
                 <View style={styles.header}>
                     <AppText variant="h1">Gerente Cão Carioca</AppText>
-                    <AppText variant="body" color={Colors.light.textMuted}>Bem-vindo de volta!</AppText>
+                    <AppText variant="body" color={theme.textMuted}>Bem-vindo de volta!</AppText>
                 </View>
 
                 <AppCard padding="lg" style={styles.cta}>
@@ -57,17 +59,17 @@ export const HomeScreen = () => {
                             {todayAppointments.slice(0, 3).map((app) => {
                                 const time = new Date(app.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
                                 return (
-                                    <View key={app.id} style={styles.miniItem}>
+                                    <View key={app.id} style={[styles.miniItem, { borderBottomColor: theme.border }]}>
                                         <View style={styles.miniTime}>
-                                            <Clock size={12} color={Colors.light.textSecondary} />
+                                            <Clock size={12} color={theme.textSecondary} />
                                             <AppText variant="caption" style={{ marginLeft: 4 }}>{time}</AppText>
                                         </View>
                                         <View style={styles.nameRow}>
                                             <AppText variant="body" style={{ fontWeight: '600' }} numberOfLines={1}>
-                                                {app.petName} <AppText variant="caption" color={Colors.light.textMuted}>({app.serviceType})</AppText>
+                                                {app.petName} <AppText variant="caption" color={theme.textMuted}>({app.serviceType})</AppText>
                                             </AppText>
                                             {app.isClubinho && (
-                                                <View style={styles.clubinhoBadge}>
+                                                <View style={[styles.clubinhoBadge, { backgroundColor: theme.primary }]}>
                                                     <Crown size={10} color="#FFF" />
                                                 </View>
                                             )}
@@ -76,7 +78,7 @@ export const HomeScreen = () => {
                                 );
                             })}
                             {todayAppointments.length > 3 && (
-                                <AppText variant="caption" color={Colors.light.textMuted} style={{ marginTop: Spacing.sm }}>
+                                <AppText variant="caption" color={theme.textMuted} style={{ marginTop: Spacing.sm }}>
                                     + {todayAppointments.length - 3} outros atendimentos...
                                 </AppText>
                             )}
@@ -94,14 +96,14 @@ export const HomeScreen = () => {
                 <View style={styles.grid}>
                     <TouchableOpacity activeOpacity={0.7} onPress={() => navigateToTab('Clients')} style={styles.menuTouchable}>
                         <AppCard style={styles.menuItem}>
-                            <Users size={32} color={Colors.light.primary} />
+                            <Users size={32} color={theme.primary} />
                             <AppText variant="h3" style={styles.menuLabel}>Tutores</AppText>
                         </AppCard>
                     </TouchableOpacity>
 
                     <TouchableOpacity activeOpacity={0.7} onPress={() => navigateToTab('Pets')} style={styles.menuTouchable}>
                         <AppCard style={styles.menuItem}>
-                            <Dog size={32} color={Colors.light.primary} />
+                            <Dog size={32} color={theme.primary} />
                             <AppText variant="h3" style={styles.menuLabel}>Pets</AppText>
                         </AppCard>
                     </TouchableOpacity>
@@ -114,7 +116,6 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.light.background,
     },
     scroll: {
         padding: Spacing.lg,
@@ -157,7 +158,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 8,
         borderBottomWidth: 1,
-        borderBottomColor: Colors.light.border,
     },
     miniTime: {
         flexDirection: 'row',
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
         gap: 6,
     },
     clubinhoBadge: {
-        backgroundColor: Colors.light.primary,
         padding: 2,
         borderRadius: 10,
     },

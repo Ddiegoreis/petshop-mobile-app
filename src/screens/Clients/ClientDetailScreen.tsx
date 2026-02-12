@@ -19,11 +19,13 @@ import { Owner } from '../../storage/schema';
 import { ClientsStackParamList } from '../../navigation/types';
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from '../../hooks/useTheme';
 
 type Nav = NativeStackNavigationProp<ClientsStackParamList>;
 type Route = RouteProp<ClientsStackParamList, 'ClientDetail'>;
 
 export const ClientDetailScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation<Nav>();
     const route = useRoute<Route>();
     const { ownerId } = route.params;
@@ -60,20 +62,20 @@ export const ClientDetailScreen = () => {
     if (!owner) return null;
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <ArrowLeft size={24} color={Colors.light.text} />
+                    <ArrowLeft size={24} color={theme.text} />
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}>
                     <AppText variant="h2">{owner.name}</AppText>
                 </View>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('AddEditClient', { ownerId: owner.id })}
-                    style={styles.iconBtn}
+                    style={[styles.iconBtn, { backgroundColor: theme.surfaceAlt }]}
                 >
-                    <Pencil size={20} color={Colors.light.primary} />
+                    <Pencil size={20} color={theme.primary} />
                 </TouchableOpacity>
             </View>
 
@@ -82,20 +84,20 @@ export const ClientDetailScreen = () => {
                 <AppCard padding="lg">
                     {owner.phone && (
                         <View style={styles.infoRow}>
-                            <Phone size={18} color={Colors.light.secondaryDark} />
+                            <Phone size={18} color={theme.secondaryDark} />
                             <AppText variant="body" style={styles.infoText}>{owner.phone}</AppText>
                         </View>
                     )}
                     {owner.address && (
                         <View style={styles.infoRow}>
-                            <MapPin size={18} color={Colors.light.secondaryDark} />
+                            <MapPin size={18} color={theme.secondaryDark} />
                             <AppText variant="body" style={styles.infoText}>{owner.address}</AppText>
                         </View>
                     )}
                     {owner.createdAt && (
                         <View style={styles.infoRow}>
-                            <Calendar size={18} color={Colors.light.secondaryDark} />
-                            <AppText variant="caption" color={Colors.light.textMuted} style={styles.infoText}>
+                            <Calendar size={18} color={theme.secondaryDark} />
+                            <AppText variant="caption" color={theme.textMuted} style={styles.infoText}>
                                 Cadastrado em {new Date(owner.createdAt).toLocaleDateString('pt-BR')}
                             </AppText>
                         </View>
@@ -107,16 +109,16 @@ export const ClientDetailScreen = () => {
                     activeOpacity={0.7}
                     onPress={() => navigation.navigate('PetsList', { ownerId: owner.id })}
                 >
-                    <AppCard padding="lg" style={styles.petsCard}>
+                    <AppCard padding="lg" style={[styles.petsCard, { borderLeftColor: theme.primary }]}>
                         <View style={styles.petsRow}>
-                            <PawPrint size={24} color={Colors.light.primary} />
+                            <PawPrint size={24} color={theme.primary} />
                             <View style={{ marginLeft: Spacing.md, flex: 1 }}>
                                 <AppText variant="h3">Pets</AppText>
-                                <AppText variant="caption" color={Colors.light.textMuted}>
+                                <AppText variant="caption" color={theme.textMuted}>
                                     Gerenciar pets deste tutor
                                 </AppText>
                             </View>
-                            <View style={styles.petsBadge}>
+                            <View style={[styles.petsBadge, { backgroundColor: theme.primary }]}>
                                 <AppText variant="caption" color="#FFF" style={{ fontWeight: '700' }}>
                                     →
                                 </AppText>
@@ -141,7 +143,6 @@ export const ClientDetailScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.light.background,
     },
     header: {
         flexDirection: 'row',
@@ -155,7 +156,6 @@ const styles = StyleSheet.create({
     },
     iconBtn: {
         padding: 8,
-        backgroundColor: Colors.light.surfaceAlt,
         borderRadius: 10,
     },
     content: {
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     },
     petsCard: {
         borderLeftWidth: 4,
-        borderLeftColor: Colors.light.primary,
     },
     petsRow: {
         flexDirection: 'row',
@@ -182,7 +181,6 @@ const styles = StyleSheet.create({
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: Colors.light.primary,
         alignItems: 'center',
         justifyContent: 'center',
     },

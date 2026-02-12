@@ -1,7 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, TouchableOpacityProps, StyleSheet, ActivityIndicator, StyleProp, TextStyle } from 'react-native';
+import { TouchableOpacity, TouchableOpacityProps, StyleSheet, ActivityIndicator, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { Colors, Spacing } from '../../constants/Colors';
 import { AppText } from './Typography';
+import { useTheme } from '../../hooks/useTheme';
 
 interface AppButtonProps extends TouchableOpacityProps {
     title: string;
@@ -19,14 +20,31 @@ export const AppButton: React.FC<AppButtonProps> = ({
     disabled,
     ...props
 }) => {
+    const { theme } = useTheme();
     const isOutline = variant === 'outline';
     const isGhost = variant === 'ghost';
+
+    const getVariantStyle = (): ViewStyle => {
+        switch (variant) {
+            case 'primary': return { backgroundColor: theme.primary };
+            case 'secondary': return { backgroundColor: theme.secondary };
+            case 'danger': return { backgroundColor: theme.danger };
+            case 'outline': return { backgroundColor: 'transparent', borderWidth: 2, borderColor: theme.primary };
+            case 'ghost': return { backgroundColor: 'transparent' };
+            default: return { backgroundColor: theme.primary };
+        }
+    };
+
+    const getTextColor = () => {
+        if (isOutline || isGhost) return theme.primary;
+        return theme.textOnPrimary;
+    };
 
     return (
         <TouchableOpacity
             style={[
                 styles.button,
-                styles[variant],
+                getVariantStyle(),
                 disabled && styles.disabled,
                 style
             ]}
@@ -35,13 +53,13 @@ export const AppButton: React.FC<AppButtonProps> = ({
             {...props}
         >
             {loading ? (
-                <ActivityIndicator color={isOutline || isGhost ? Colors.light.primary : '#FFF'} />
+                <ActivityIndicator color={getTextColor()} />
             ) : (
                 <AppText
                     variant="body"
                     style={[
                         styles.text,
-                        { color: isOutline || isGhost ? Colors.light.primary : '#FFF' },
+                        { color: getTextColor() },
                         { fontWeight: '600' },
                         textStyle
                     ]}
@@ -61,23 +79,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: 52,
-    },
-    primary: {
-        backgroundColor: Colors.light.primary,
-    },
-    secondary: {
-        backgroundColor: Colors.light.secondary,
-    },
-    danger: {
-        backgroundColor: Colors.light.danger,
-    },
-    outline: {
-        backgroundColor: 'transparent',
-        borderWidth: 2,
-        borderColor: Colors.light.primary,
-    },
-    ghost: {
-        backgroundColor: 'transparent',
     },
     disabled: {
         opacity: 0.5,

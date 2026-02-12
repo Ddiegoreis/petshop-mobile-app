@@ -2,6 +2,7 @@ import React from 'react';
 import { TextInput, TextInputProps, View, StyleSheet } from 'react-native';
 import { Colors, Spacing } from '../../constants/Colors';
 import { AppText } from './Typography';
+import { useTheme } from '../../hooks/useTheme';
 
 interface AppInputProps extends TextInputProps {
     label?: string;
@@ -14,22 +15,29 @@ export const AppInput: React.FC<AppInputProps> = ({
     style,
     ...props
 }) => {
+    const { theme } = useTheme();
+
     return (
         <View style={styles.wrapper}>
             {label && (
-                <AppText variant="caption" style={styles.label}>{label}</AppText>
+                <AppText variant="caption" style={[styles.label, { color: theme.textSecondary }]}>{label}</AppText>
             )}
             <TextInput
                 style={[
                     styles.input,
-                    error ? styles.inputError : null,
+                    {
+                        backgroundColor: theme.surface,
+                        borderColor: theme.border,
+                        color: theme.text
+                    },
+                    error ? { borderColor: theme.error } : null,
                     style,
                 ]}
-                placeholderTextColor={Colors.light.textMuted}
+                placeholderTextColor={theme.textMuted}
                 {...props}
             />
             {error && (
-                <AppText variant="caption" color={Colors.light.error} style={styles.errorText}>
+                <AppText variant="caption" color={theme.error} style={styles.errorText}>
                     {error}
                 </AppText>
             )}
@@ -43,21 +51,14 @@ const styles = StyleSheet.create({
     },
     label: {
         marginBottom: Spacing.xs,
-        color: Colors.light.textSecondary,
         fontWeight: '600',
     },
     input: {
-        backgroundColor: Colors.light.surface,
         borderWidth: 1.5,
-        borderColor: Colors.light.border,
         borderRadius: 12,
         paddingHorizontal: Spacing.md,
         paddingVertical: 14,
         fontSize: 16,
-        color: Colors.light.text,
-    },
-    inputError: {
-        borderColor: Colors.light.error,
     },
     errorText: {
         marginTop: Spacing.xs,

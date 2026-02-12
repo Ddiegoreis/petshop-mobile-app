@@ -17,11 +17,13 @@ import { AppCard } from '../../components/ui/Card';
 import { Colors, Spacing } from '../../constants/Colors';
 import { petDao, PetWithOwner } from '../../storage/daos/petDao';
 import { PetsStackParamList } from '../../navigation/types';
+import { useTheme } from '../../hooks/useTheme';
 
 type Nav = NativeStackNavigationProp<PetsStackParamList>;
 type Route = RouteProp<PetsStackParamList, 'PetsList'>;
 
 export const PetsListScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation<Nav>();
     const route = useRoute<Route>();
     const filterOwnerId = route.params?.ownerId;
@@ -80,17 +82,17 @@ export const PetsListScreen = () => {
             <AppCard padding="md" style={styles.card}>
                 <View style={styles.cardContent}>
                     <View style={styles.row}>
-                        <View style={styles.avatar}>
-                            <PawPrint size={20} color={Colors.light.primary} />
+                        <View style={[styles.avatar, { backgroundColor: theme.surfaceAlt }]}>
+                            <PawPrint size={20} color={theme.primary} />
                         </View>
                         <View style={{ marginLeft: 12 }}>
                             <AppText variant="h3">{item.name}</AppText>
                             {item.breed && (
-                                <AppText variant="caption" color={Colors.light.textMuted}>{item.breed}</AppText>
+                                <AppText variant="caption" color={theme.textMuted}>{item.breed}</AppText>
                             )}
                         </View>
                     </View>
-                    <ChevronRight size={20} color={Colors.light.textMuted} />
+                    <ChevronRight size={20} color={theme.textMuted} />
                 </View>
             </AppCard>
         </TouchableOpacity>
@@ -98,7 +100,7 @@ export const PetsListScreen = () => {
 
     const renderSectionHeader = ({ section: { title } }: { section: { title: string } }) => (
         <View style={styles.sectionHeader}>
-            <AppText variant="caption" style={styles.sectionTitle}>{title}</AppText>
+            <AppText variant="caption" style={[styles.sectionTitle, { color: theme.primary }]}>{title}</AppText>
         </View>
     );
 
@@ -114,8 +116,8 @@ export const PetsListScreen = () => {
         if (pets.length === 0) {
             return (
                 <View style={styles.empty}>
-                    <PawPrint size={48} color={Colors.light.border} />
-                    <AppText variant="body" color={Colors.light.textMuted} style={{ marginTop: Spacing.md }}>
+                    <PawPrint size={48} color={theme.border} />
+                    <AppText variant="body" color={theme.textMuted} style={{ marginTop: Spacing.md }}>
                         Nenhum pet encontrado.
                     </AppText>
                 </View>
@@ -148,25 +150,25 @@ export const PetsListScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <View style={styles.headerTop}>
                     {filterOwnerId && (
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                            <ArrowLeft size={24} color={Colors.light.text} />
+                            <ArrowLeft size={24} color={theme.text} />
                         </TouchableOpacity>
                     )}
                     <AppText variant="h1">Pets</AppText>
                 </View>
-                {filterOwnerId && <AppText variant="caption">Deste tutor</AppText>}
+                {filterOwnerId && <AppText variant="caption" color={theme.textSecondary}>Deste tutor</AppText>}
             </View>
 
-            <View style={styles.searchContainer}>
-                <Search size={18} color={Colors.light.textMuted} style={styles.searchIcon} />
+            <View style={[styles.searchContainer, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                <Search size={18} color={theme.textMuted} style={styles.searchIcon} />
                 <TextInput
-                    style={styles.searchInput}
+                    style={[styles.searchInput, { color: theme.text }]}
                     placeholder="Buscar pet..."
-                    placeholderTextColor={Colors.light.textMuted}
+                    placeholderTextColor={theme.textMuted}
                     value={search}
                     onChangeText={setSearch}
                 />
@@ -176,7 +178,7 @@ export const PetsListScreen = () => {
 
             {/* FAB */}
             <TouchableOpacity
-                style={styles.fab}
+                style={[styles.fab, { backgroundColor: theme.primary, shadowColor: theme.primary }]}
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('AddEditPet', { ownerId: filterOwnerId })}
             >
@@ -189,7 +191,6 @@ export const PetsListScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.light.background,
     },
     header: {
         paddingHorizontal: Spacing.lg,
@@ -208,13 +209,11 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: Colors.light.surface,
         borderRadius: 12,
         marginHorizontal: Spacing.lg,
         marginBottom: Spacing.md,
         paddingHorizontal: Spacing.md,
         borderWidth: 1,
-        borderColor: Colors.light.border,
     },
     searchIcon: {
         marginRight: Spacing.sm,
@@ -223,7 +222,6 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 12,
         fontSize: 16,
-        color: Colors.light.text,
     },
     list: {
         paddingHorizontal: Spacing.lg,
@@ -245,7 +243,6 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: Colors.light.surfaceAlt,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -254,7 +251,6 @@ const styles = StyleSheet.create({
         marginBottom: Spacing.sm,
     },
     sectionTitle: {
-        color: Colors.light.primary,
         fontWeight: 'bold',
         textTransform: 'uppercase',
         fontSize: 12,
@@ -276,10 +272,8 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: Colors.light.primary,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: Colors.light.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, TextProps, StyleSheet } from 'react-native';
-import { Colors, Typography } from '../../constants/Colors';
+import { Typography } from '../../constants/Colors';
+import { useTheme } from '../../hooks/useTheme';
 
 export const AppText: React.FC<TextProps & { variant?: keyof typeof Typography; color?: string }> = ({
     style,
@@ -8,11 +9,13 @@ export const AppText: React.FC<TextProps & { variant?: keyof typeof Typography; 
     color,
     ...props
 }) => {
+    const { theme } = useTheme();
+
     return (
         <Text
             style={[
                 Typography[variant],
-                { color: color || Colors.light.text },
+                { color: color || theme.text },
                 style
             ]}
             {...props}

@@ -11,10 +11,12 @@ import { appointmentDao, AppointmentWithDetails } from '../../storage/daos/appoi
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AgendaStackParamList } from '../../navigation/types';
+import { useTheme } from '../../hooks/useTheme';
 
 type Nav = NativeStackNavigationProp<AgendaStackParamList>;
 
 export const AgendaScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation<Nav>();
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([]);
@@ -46,23 +48,30 @@ export const AgendaScreen = () => {
 
         return (
             <TouchableOpacity
-                style={[styles.item, { borderLeftColor: item.status === 'COMPLETED' ? Colors.light.success : item.status === 'CANCELLED' ? Colors.light.danger : Colors.light.primary, borderLeftWidth: 4 }]}
+                style={[
+                    styles.item,
+                    {
+                        backgroundColor: theme.surface,
+                        borderLeftColor: item.status === 'COMPLETED' ? theme.success : item.status === 'CANCELLED' ? theme.danger : theme.primary,
+                        borderLeftWidth: 4
+                    }
+                ]}
                 onPress={() => navigation.navigate('AppointmentDetail', { appointmentId: item.id })}
             >
-                <View style={styles.itemTimeContainer}>
+                <View style={[styles.itemTimeContainer, { borderRightColor: theme.border }]}>
                     <AppText variant="h3">{time}</AppText>
                     <View style={[
                         styles.statusDot,
-                        { backgroundColor: item.status === 'COMPLETED' ? Colors.light.success : item.status === 'CANCELLED' ? Colors.light.danger : Colors.light.primary }
+                        { backgroundColor: item.status === 'COMPLETED' ? theme.success : item.status === 'CANCELLED' ? theme.danger : theme.primary }
                     ]} />
                 </View>
                 <View style={styles.itemContent}>
                     <AppText variant="h3">{item.petName}</AppText>
-                    <AppText variant="body" color={Colors.light.textSecondary}>{item.serviceType}</AppText>
+                    <AppText variant="body" color={theme.textSecondary}>{item.serviceType}</AppText>
                     <View style={styles.ownerRow}>
-                        <AppText variant="caption" color={Colors.light.textMuted}>{item.ownerName}</AppText>
+                        <AppText variant="caption" color={theme.textMuted}>{item.ownerName}</AppText>
                         {item.isClubinho && (
-                            <View style={styles.clubinhoBadge}>
+                            <View style={[styles.clubinhoBadge, { backgroundColor: theme.primary }]}>
                                 <Crown size={10} color="#FFF" />
                                 <AppText style={styles.clubinhoText}>Clubinho</AppText>
                             </View>
@@ -76,37 +85,37 @@ export const AgendaScreen = () => {
     const markedDates = React.useMemo(() => ({
         [selectedDate]: {
             selected: true,
-            selectedColor: Colors.light.primary,
+            selectedColor: theme.primary,
             selectedTextColor: 'white'
         }
-    }), [selectedDate]);
+    }), [selectedDate, theme.primary]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <AppText variant="h1">Agenda</AppText>
             </View>
 
-            <View style={styles.calendarContainer}>
+            <View style={[styles.calendarContainer, { backgroundColor: theme.background, borderBottomColor: theme.border }]}>
                 <Calendar
                     onDayPress={(day: DateData) => setSelectedDate(day.dateString)}
                     markedDates={markedDates}
                     showSixWeeks={true}
                     enableSwipeMonths={true}
                     theme={{
-                        backgroundColor: Colors.light.background,
-                        calendarBackground: Colors.light.background,
-                        textSectionTitleColor: Colors.light.textSecondary,
-                        selectedDayBackgroundColor: Colors.light.primary,
+                        backgroundColor: theme.background,
+                        calendarBackground: theme.background,
+                        textSectionTitleColor: theme.textSecondary,
+                        selectedDayBackgroundColor: theme.primary,
                         selectedDayTextColor: '#ffffff',
-                        todayTextColor: Colors.light.primary,
-                        dayTextColor: Colors.light.text || '#333',
-                        textDisabledColor: Colors.light.textMuted,
-                        dotColor: Colors.light.primary,
+                        todayTextColor: theme.primary,
+                        dayTextColor: theme.text,
+                        textDisabledColor: theme.textMuted,
+                        dotColor: theme.primary,
                         selectedDotColor: '#ffffff',
-                        arrowColor: Colors.light.primary,
-                        monthTextColor: Colors.light.text || '#333',
-                        indicatorColor: Colors.light.primary,
+                        arrowColor: theme.primary,
+                        monthTextColor: theme.text,
+                        indicatorColor: theme.primary,
                         textDayFontWeight: '400',
                         textMonthFontWeight: 'bold',
                         textDayHeaderFontWeight: '600',
@@ -117,7 +126,7 @@ export const AgendaScreen = () => {
                 />
             </View>
 
-            <View style={styles.listHeader}>
+            <View style={[styles.listHeader, { backgroundColor: theme.background }]}>
                 <AppText variant="h2">
                     {format(new Date(selectedDate + 'T12:00:00'), "EEEE, d 'de' MMMM", { locale: ptBR })}
                 </AppText>
@@ -130,7 +139,7 @@ export const AgendaScreen = () => {
                 contentContainerStyle={styles.listContent}
                 ListEmptyComponent={() => (
                     <View style={styles.emptyContainer}>
-                        <AppText color={Colors.light.textMuted}>Nenhum agendamento para este dia</AppText>
+                        <AppText color={theme.textMuted}>Nenhum agendamento para este dia</AppText>
                     </View>
                 )}
                 refreshing={isLoading}
@@ -138,7 +147,7 @@ export const AgendaScreen = () => {
             />
 
             <TouchableOpacity
-                style={styles.fab}
+                style={[styles.fab, { backgroundColor: theme.primary, shadowColor: theme.primary }]}
                 onPress={() => navigation.navigate('AddAppointment', { date: selectedDate })}
             >
                 <Plus size={28} color="#FFF" />
@@ -148,17 +157,15 @@ export const AgendaScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Colors.light.background },
+    container: { flex: 1 },
     header: {
         paddingHorizontal: Spacing.lg,
         paddingTop: Spacing.md,
         paddingBottom: Spacing.sm,
     },
     calendarContainer: {
-        backgroundColor: Colors.light.background,
         paddingBottom: Spacing.sm,
         borderBottomWidth: 1,
-        borderBottomColor: Colors.light.border,
     },
     listHeader: {
         flexDirection: 'row',
@@ -166,14 +173,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: Spacing.md,
         paddingVertical: Spacing.sm,
-        backgroundColor: Colors.light.background,
     },
     listContent: {
         paddingHorizontal: Spacing.md,
         paddingBottom: Spacing.lg * 2,
     },
     item: {
-        backgroundColor: 'white',
         borderRadius: 12,
         padding: Spacing.md,
         marginTop: Spacing.md,
@@ -189,7 +194,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginRight: Spacing.md,
         borderRightWidth: 1,
-        borderRightColor: Colors.light.border,
         paddingRight: Spacing.md,
         width: 70,
     },
@@ -212,7 +216,6 @@ const styles = StyleSheet.create({
     clubinhoBadge: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: Colors.light.primary,
         paddingHorizontal: 6,
         paddingVertical: 1,
         borderRadius: 10,
@@ -234,10 +237,8 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: Colors.light.primary,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: Colors.light.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,

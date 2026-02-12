@@ -16,11 +16,13 @@ import { AppButton } from '../../components/ui/Button';
 import { Colors, Spacing } from '../../constants/Colors';
 import { petDao, PetWithOwner } from '../../storage/daos/petDao';
 import { PetsStackParamList } from '../../navigation/types';
+import { useTheme } from '../../hooks/useTheme';
 
 type Nav = NativeStackNavigationProp<PetsStackParamList>;
 type Route = RouteProp<PetsStackParamList, 'PetDetail'>;
 
 export const PetDetailScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation<Nav>();
     const route = useRoute<Route>();
     const { petId } = route.params;
@@ -57,44 +59,44 @@ export const PetDetailScreen = () => {
     if (!pet) return null;
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <ArrowLeft size={24} color={Colors.light.text} />
+                    <ArrowLeft size={24} color={theme.text} />
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}>
                     <AppText variant="h2">{pet.name}</AppText>
                 </View>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('AddEditPet', { petId: pet.id, ownerId: pet.ownerId })}
-                    style={styles.iconBtn}
+                    style={[styles.iconBtn, { backgroundColor: theme.surfaceAlt }]}
                 >
-                    <Pencil size={20} color={Colors.light.primary} />
+                    <Pencil size={20} color={theme.primary} />
                 </TouchableOpacity>
             </View>
 
             <ScrollView contentContainerStyle={styles.content}>
                 <AppCard padding="lg">
                     <View style={styles.infoRow}>
-                        <PawPrint size={18} color={Colors.light.secondaryDark} />
+                        <PawPrint size={18} color={theme.secondaryDark} />
                         <AppText variant="body" style={styles.infoText}>{pet.breed || 'Raça não informada'}</AppText>
                     </View>
 
                     {pet.dob && (
                         <View style={styles.infoRow}>
-                            <Calendar size={18} color={Colors.light.secondaryDark} />
+                            <Calendar size={18} color={theme.secondaryDark} />
                             <AppText variant="body" style={styles.infoText}>Nasc: {pet.dob}</AppText>
                         </View>
                     )}
 
                     <View style={styles.infoRow}>
-                        <User size={18} color={Colors.light.secondaryDark} />
+                        <User size={18} color={theme.secondaryDark} />
                         <AppText variant="body" style={styles.infoText}>Tutor: {pet.ownerName}</AppText>
                     </View>
 
                     {pet.notes && (
                         <View style={styles.infoRow}>
-                            <FileText size={18} color={Colors.light.secondaryDark} />
+                            <FileText size={18} color={theme.secondaryDark} />
                             <AppText variant="body" style={styles.infoText}>{pet.notes}</AppText>
                         </View>
                     )}
@@ -115,7 +117,6 @@ export const PetDetailScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.light.background,
     },
     header: {
         flexDirection: 'row',
@@ -129,7 +130,6 @@ const styles = StyleSheet.create({
     },
     iconBtn: {
         padding: 8,
-        backgroundColor: Colors.light.surfaceAlt,
         borderRadius: 10,
     },
     content: {

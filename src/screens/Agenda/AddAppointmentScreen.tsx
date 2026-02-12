@@ -17,19 +17,19 @@ import { ownerDao } from '../../storage/daos/ownerDao';
 import { petDao } from '../../storage/daos/petDao';
 import { Owner, Pet } from '../../storage/schema';
 import { AgendaStackParamList } from '../../navigation/types';
+import { useTheme } from '../../hooks/useTheme';
 
 type Nav = NativeStackNavigationProp<AgendaStackParamList>;
 type Route = RouteProp<AgendaStackParamList, 'AddAppointment'>;
 
 export const AddAppointmentScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation<Nav>();
     const route = useRoute<Route>();
 
-    // Form State
     const [selectedOwnerId, setSelectedOwnerId] = useState<number | undefined>();
     const [selectedPetId, setSelectedPetId] = useState<number | undefined>(route.params?.petId);
-    const [date, setDate] = useState(new Date(route.params?.date || Date.now()));
-    // Simple date input for MVP (YYYY-MM-DD HH:MM)
+
     const [dateStr, setDateStr] = useState(route.params?.date || new Date().toISOString().split('T')[0]);
     const [timeStr, setTimeStr] = useState('09:00');
 
@@ -37,7 +37,6 @@ export const AddAppointmentScreen = () => {
     const [notes, setNotes] = useState('');
     const [recurrence, setRecurrence] = useState<'NONE' | 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY'>('NONE');
 
-    // Data State
     const [owners, setOwners] = useState<Owner[]>([]);
     const [pets, setPets] = useState<Pet[]>([]);
     const [loading, setLoading] = useState(false);
@@ -68,7 +67,7 @@ export const AddAppointmentScreen = () => {
     const requestCalendarPermissions = async () => {
         const { status } = await Calendar.requestCalendarPermissionsAsync();
         if (status !== 'granted') {
-            // Alert.alert('Permissão necessária', 'Precisamos de acesso ao calendário para sincronizar.');
+            Alert.alert('Permissão necessária', 'Precisamos de acesso ao calendário para sincronizar.');
         }
     };
 
@@ -166,10 +165,10 @@ export const AddAppointmentScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <ArrowLeft size={24} color={Colors.light.text} />
+                    <ArrowLeft size={24} color={theme.text} />
                 </TouchableOpacity>
                 <AppText variant="h1">Novo Agendamento</AppText>
             </View>
@@ -178,31 +177,33 @@ export const AddAppointmentScreen = () => {
 
                 {/* Owner Selection */}
                 <View style={styles.section}>
-                    <AppText variant="caption" style={styles.label}>Tutor *</AppText>
-                    <View style={styles.pickerWrapper}>
+                    <AppText variant="caption" style={[styles.label, { color: theme.textSecondary }]}>Tutor *</AppText>
+                    <View style={[styles.pickerWrapper, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                         <Picker
                             selectedValue={selectedOwnerId}
                             onValueChange={(v: number | undefined) => { setSelectedOwnerId(v); setSelectedPetId(undefined); }}
-                            style={styles.picker}
+                            style={[styles.picker, { color: theme.text }]}
+                            dropdownIconColor={theme.primary}
                         >
-                            <Picker.Item label="Selecione..." value={undefined} />
-                            {owners.map(o => <Picker.Item key={o.id} label={o.name} value={o.id} />)}
+                            <Picker.Item label="Selecione..." value={undefined} color={theme.textMuted} />
+                            {owners.map(o => <Picker.Item key={o.id} label={o.name} value={o.id} color={theme.text} />)}
                         </Picker>
                     </View>
                 </View>
 
                 {/* Pet Selection */}
                 <View style={styles.section}>
-                    <AppText variant="caption" style={styles.label}>Pet *</AppText>
-                    <View style={styles.pickerWrapper}>
+                    <AppText variant="caption" style={[styles.label, { color: theme.textSecondary }]}>Pet *</AppText>
+                    <View style={[styles.pickerWrapper, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                         <Picker
                             selectedValue={selectedPetId}
                             onValueChange={(v: number | undefined) => setSelectedPetId(v)}
                             enabled={!!selectedOwnerId}
-                            style={styles.picker}
+                            style={[styles.picker, { color: theme.text }]}
+                            dropdownIconColor={theme.primary}
                         >
-                            <Picker.Item label="Selecione..." value={undefined} />
-                            {pets.map(p => <Picker.Item key={p.id} label={p.name} value={p.id} />)}
+                            <Picker.Item label="Selecione..." value={undefined} color={theme.textMuted} />
+                            {pets.map(p => <Picker.Item key={p.id} label={p.name} value={p.id} color={theme.text} />)}
                         </Picker>
                     </View>
                 </View>
@@ -237,17 +238,18 @@ export const AddAppointmentScreen = () => {
 
                 {/* Recurrence */}
                 <View style={styles.section}>
-                    <AppText variant="caption" style={styles.label}>Repetição</AppText>
-                    <View style={styles.pickerWrapper}>
+                    <AppText variant="caption" style={[styles.label, { color: theme.textSecondary }]}>Repetição</AppText>
+                    <View style={[styles.pickerWrapper, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                         <Picker
                             selectedValue={recurrence}
                             onValueChange={(v: any) => setRecurrence(v)}
-                            style={styles.picker}
+                            style={[styles.picker, { color: theme.text }]}
+                            dropdownIconColor={theme.primary}
                         >
-                            <Picker.Item label="Não repetir" value="NONE" />
-                            <Picker.Item label="Semanal" value="WEEKLY" />
-                            <Picker.Item label="Quinzenal" value="BIWEEKLY" />
-                            <Picker.Item label="Mensal" value="MONTHLY" />
+                            <Picker.Item label="Não repetir" value="NONE" color={theme.text} />
+                            <Picker.Item label="Semanal" value="WEEKLY" color={theme.text} />
+                            <Picker.Item label="Quinzenal" value="BIWEEKLY" color={theme.text} />
+                            <Picker.Item label="Mensal" value="MONTHLY" color={theme.text} />
                         </Picker>
                     </View>
                 </View>
@@ -273,7 +275,7 @@ export const AddAppointmentScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Colors.light.background },
+    container: { flex: 1 },
     header: {
         padding: Spacing.lg,
         paddingBottom: 0,
@@ -287,12 +289,10 @@ const styles = StyleSheet.create({
     },
     form: { padding: Spacing.lg },
     section: { marginBottom: Spacing.md },
-    label: { marginBottom: 4, color: Colors.light.textSecondary },
+    label: { marginBottom: 4 },
     pickerWrapper: {
         borderWidth: 1,
-        borderColor: Colors.light.border,
         borderRadius: 8,
-        backgroundColor: Colors.light.surface,
         overflow: 'hidden',
     },
     picker: { height: 50 },
@@ -302,9 +302,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: Spacing.md,
         padding: Spacing.md,
-        backgroundColor: Colors.light.surface,
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: Colors.light.border,
     },
 });

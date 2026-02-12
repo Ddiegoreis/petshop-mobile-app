@@ -10,11 +10,13 @@ import { Colors, Spacing } from '../../constants/Colors';
 import { appointmentDao, AppointmentWithDetails } from '../../storage/daos/appointmentDao';
 import { AgendaStackParamList } from '../../navigation/types';
 import { ArrowLeft } from 'lucide-react-native';
+import { useTheme } from '../../hooks/useTheme';
 
 type Nav = NativeStackNavigationProp<AgendaStackParamList>;
 type Route = RouteProp<AgendaStackParamList, 'AppointmentDetail'>;
 
 export const AppointmentDetailScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation<Nav>();
     const route = useRoute<Route>();
     const { appointmentId } = route.params;
@@ -50,7 +52,7 @@ export const AppointmentDetailScreen = () => {
 
     if (loading || !appointment) {
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
                 <AppText>Carregando...</AppText>
             </SafeAreaView>
         );
@@ -60,52 +62,52 @@ export const AppointmentDetailScreen = () => {
     const timeFormatted = new Date(appointment.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                        <ArrowLeft size={24} color={Colors.light.text} />
+                        <ArrowLeft size={24} color={theme.text} />
                     </TouchableOpacity>
                     <AppText variant="h1">Detalhes</AppText>
                 </View>
 
                 <AppCard style={styles.card}>
                     <View style={styles.row}>
-                        <AppText variant="caption" color={Colors.light.textSecondary}>Data</AppText>
+                        <AppText variant="caption" color={theme.textSecondary}>Data</AppText>
                         <AppText variant="h3">{dateFormatted} às {timeFormatted}</AppText>
                     </View>
 
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, { backgroundColor: theme.border }]} />
 
                     <View style={styles.row}>
-                        <AppText variant="caption" color={Colors.light.textSecondary}>Serviço</AppText>
+                        <AppText variant="caption" color={theme.textSecondary}>Serviço</AppText>
                         <AppText variant="body">{appointment.serviceType}</AppText>
                     </View>
 
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, { backgroundColor: theme.border }]} />
 
                     <View style={styles.row}>
-                        <AppText variant="caption" color={Colors.light.textSecondary}>Pet</AppText>
+                        <AppText variant="caption" color={theme.textSecondary}>Pet</AppText>
                         <AppText variant="body">{appointment.petName} ({appointment.ownerName})</AppText>
                     </View>
 
                     {appointment.notes && (
                         <>
-                            <View style={styles.divider} />
+                            <View style={[styles.divider, { backgroundColor: theme.border }]} />
                             <View style={styles.row}>
-                                <AppText variant="caption" color={Colors.light.textSecondary}>Notas</AppText>
+                                <AppText variant="caption" color={theme.textSecondary}>Notas</AppText>
                                 <AppText variant="body">{appointment.notes}</AppText>
                             </View>
                         </>
                     )}
 
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, { backgroundColor: theme.border }]} />
 
                     <View style={styles.row}>
-                        <AppText variant="caption" color={Colors.light.textSecondary}>Status</AppText>
+                        <AppText variant="caption" color={theme.textSecondary}>Status</AppText>
                         <AppText
                             variant="h3"
-                            color={appointment.status === 'COMPLETED' ? Colors.light.success : appointment.status === 'CANCELLED' ? Colors.light.danger : Colors.light.primary}
+                            color={appointment.status === 'COMPLETED' ? theme.success : appointment.status === 'CANCELLED' ? theme.danger : theme.primary}
                         >
                             {appointment.status === 'PENDING' ? 'Agendado' : appointment.status === 'COMPLETED' ? 'Concluído' : 'Cancelado'}
                         </AppText>
@@ -117,7 +119,7 @@ export const AppointmentDetailScreen = () => {
                         <AppButton
                             title="Concluir Atendimento"
                             onPress={() => handleUpdateStatus('COMPLETED')}
-                            style={{ backgroundColor: Colors.light.success, marginBottom: Spacing.md }}
+                            style={{ backgroundColor: theme.success, marginBottom: Spacing.md }}
                         />
                         <AppButton
                             title="Cancelar Agendamento"
@@ -126,8 +128,8 @@ export const AppointmentDetailScreen = () => {
                                 { text: 'Sim', style: 'destructive', onPress: () => handleUpdateStatus('CANCELLED') }
                             ])}
                             variant="outline"
-                            style={{ borderColor: Colors.light.danger }}
-                            textStyle={{ color: Colors.light.danger }}
+                            style={{ borderColor: theme.danger }}
+                            textStyle={{ color: theme.danger }}
                         />
                     </View>
                 )}
@@ -137,11 +139,11 @@ export const AppointmentDetailScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Colors.light.background },
+    container: { flex: 1 },
     content: { padding: Spacing.lg },
     card: { padding: Spacing.md },
     row: { marginBottom: Spacing.sm },
-    divider: { height: 1, backgroundColor: Colors.light.border, marginVertical: Spacing.sm },
+    divider: { height: 1, marginVertical: Spacing.sm },
     actions: { marginTop: Spacing.xl },
     header: {
         flexDirection: 'row',

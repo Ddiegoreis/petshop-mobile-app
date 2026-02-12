@@ -17,10 +17,12 @@ import { Colors, Spacing } from '../../constants/Colors';
 import { ownerDao } from '../../storage/daos/ownerDao';
 import { Owner } from '../../storage/schema';
 import { ClientsStackParamList } from '../../navigation/types';
+import { useTheme } from '../../hooks/useTheme';
 
 type Nav = NativeStackNavigationProp<ClientsStackParamList>;
 
 export const ClientsListScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation<Nav>();
     const [owners, setOwners] = useState<Owner[]>([]);
     const [search, setSearch] = useState('');
@@ -60,16 +62,16 @@ export const ClientsListScreen = () => {
 
                         <View style={styles.tagsRow}>
                             {item.isClubinho && (
-                                <View style={styles.clubinhoTag}>
-                                    <Crown size={12} color={Colors.light.primary} />
-                                    <AppText variant="caption" style={styles.clubinhoTagText}>Clubinho</AppText>
+                                <View style={[styles.clubinhoTag, { backgroundColor: theme.surfaceAlt, borderColor: theme.primary + '33' }]}>
+                                    <Crown size={12} color={theme.primary} />
+                                    <AppText variant="caption" style={[styles.clubinhoTagText, { color: theme.primary }]}>Clubinho</AppText>
                                 </View>
                             )}
                         </View>
                         {item.phone && (
                             <View style={styles.phoneRow}>
-                                <Phone size={14} color={Colors.light.textMuted} />
-                                <AppText variant="caption" color={Colors.light.textMuted} style={{ marginLeft: 6 }}>
+                                <Phone size={14} color={theme.textMuted} />
+                                <AppText variant="caption" color={theme.textMuted} style={{ marginLeft: 6 }}>
                                     {item.phone}
                                 </AppText>
                             </View>
@@ -78,15 +80,15 @@ export const ClientsListScreen = () => {
 
                     <View style={styles.cardActions}>
                         <TouchableOpacity
-                            style={styles.petsBtn}
+                            style={[styles.petsBtn, { backgroundColor: theme.surfaceAlt }]}
                             onPress={() => navigation.navigate('PetsList', { ownerId: item.id })}
                         >
-                            <PawPrint size={16} color={Colors.light.primary} />
-                            <AppText variant="caption" color={Colors.light.primary} style={{ marginLeft: 4, fontWeight: '600' }}>
+                            <PawPrint size={16} color={theme.primary} />
+                            <AppText variant="caption" color={theme.primary} style={{ marginLeft: 4, fontWeight: '600' }}>
                                 Pets
                             </AppText>
                         </TouchableOpacity>
-                        <ChevronRight size={20} color={Colors.light.textMuted} />
+                        <ChevronRight size={20} color={theme.textMuted} />
                     </View>
                 </View>
             </AppCard>
@@ -94,20 +96,20 @@ export const ClientsListScreen = () => {
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <AppText variant="h1">Tutores</AppText>
-                <AppText variant="caption" color={Colors.light.textSecondary}>
+                <AppText variant="caption" color={theme.textSecondary}>
                     {owners.length} cadastrado{owners.length !== 1 ? 's' : ''}
                 </AppText>
             </View>
 
-            <View style={styles.searchContainer}>
-                <Search size={18} color={Colors.light.textMuted} style={styles.searchIcon} />
+            <View style={[styles.searchContainer, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                <Search size={18} color={theme.textMuted} style={styles.searchIcon} />
                 <TextInput
-                    style={styles.searchInput}
+                    style={[styles.searchInput, { color: theme.text }]}
                     placeholder="Buscar tutor..."
-                    placeholderTextColor={Colors.light.textMuted}
+                    placeholderTextColor={theme.textMuted}
                     value={search}
                     onChangeText={setSearch}
                 />
@@ -120,8 +122,8 @@ export const ClientsListScreen = () => {
                 contentContainerStyle={styles.list}
                 ListEmptyComponent={
                     <View style={styles.empty}>
-                        <PawPrint size={48} color={Colors.light.border} />
-                        <AppText variant="body" color={Colors.light.textMuted} style={{ marginTop: Spacing.md }}>
+                        <PawPrint size={48} color={theme.border} />
+                        <AppText variant="body" color={theme.textMuted} style={{ marginTop: Spacing.md }}>
                             {loading ? 'Carregando...' : 'Nenhum tutor cadastrado'}
                         </AppText>
                     </View>
@@ -130,7 +132,7 @@ export const ClientsListScreen = () => {
 
             {/* FAB */}
             <TouchableOpacity
-                style={styles.fab}
+                style={[styles.fab, { backgroundColor: theme.primary, shadowColor: theme.primary }]}
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('AddEditClient', {})}
             >
@@ -143,7 +145,6 @@ export const ClientsListScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.light.background,
     },
     header: {
         paddingHorizontal: Spacing.lg,
@@ -153,13 +154,11 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: Colors.light.surface,
         borderRadius: 12,
         marginHorizontal: Spacing.lg,
         marginBottom: Spacing.md,
         paddingHorizontal: Spacing.md,
         borderWidth: 1,
-        borderColor: Colors.light.border,
     },
     searchIcon: {
         marginRight: Spacing.sm,
@@ -168,7 +167,6 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 12,
         fontSize: 16,
-        color: Colors.light.text,
     },
     list: {
         paddingHorizontal: Spacing.lg,
@@ -197,16 +195,13 @@ const styles = StyleSheet.create({
     clubinhoTag: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: Colors.light.surfaceAlt,
         paddingHorizontal: 8,
         paddingVertical: 2,
         borderRadius: 6,
         gap: 4,
         borderWidth: 1,
-        borderColor: Colors.light.primary + '33',
     },
     clubinhoTagText: {
-        color: Colors.light.primary,
         fontSize: 11,
         fontWeight: '700',
     },
@@ -223,7 +218,6 @@ const styles = StyleSheet.create({
     petsBtn: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: Colors.light.surfaceAlt,
         paddingHorizontal: 10,
         paddingVertical: 6,
         borderRadius: 8,
@@ -240,10 +234,8 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: Colors.light.primary,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: Colors.light.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,

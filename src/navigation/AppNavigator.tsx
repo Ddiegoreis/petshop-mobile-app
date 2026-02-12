@@ -8,26 +8,27 @@ import { ClientsStack } from './stacks/ClientsStack';
 import { PetsStack } from './stacks/PetsStack';
 import { AgendaStack } from './stacks/AgendaStack';
 import { FinanceStack } from './stacks/FinanceStack';
-import { Colors } from '../constants/Colors';
+import { useTheme } from '../hooks/useTheme';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export const AppNavigator = () => {
     const insets = useSafeAreaInsets();
+    const { theme } = useTheme();
 
     return (
         <Tab.Navigator
             screenOptions={{
                 headerShown: false,
-                tabBarActiveTintColor: Colors.light.primary,
-                tabBarInactiveTintColor: Colors.light.textMuted,
+                tabBarActiveTintColor: theme.primary,
+                tabBarInactiveTintColor: theme.textMuted,
                 tabBarStyle: {
-                    backgroundColor: Colors.light.surface,
-                    borderTopColor: Colors.light.border,
+                    backgroundColor: theme.surface,
+                    borderTopColor: theme.border,
                     borderTopWidth: 1,
                     paddingTop: 8,
                     paddingBottom: insets.bottom > 0 ? insets.bottom : 8,
-                    height: 60 + (insets.bottom > 0 ? insets.bottom - 10 : 0),
+                    height: 60 + (insets.bottom > 0 ? insets.bottom : 0),
                     elevation: 0,
                     shadowOpacity: 0,
                 },

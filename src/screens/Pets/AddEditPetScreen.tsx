@@ -20,10 +20,12 @@ import { ownerDao } from '../../storage/daos/ownerDao';
 import { PetsStackParamList } from '../../navigation/types';
 import { Owner } from '../../storage/schema';
 import { Picker } from '@react-native-picker/picker';
+import { useTheme } from '../../hooks/useTheme';
 
 type Route = RouteProp<PetsStackParamList, 'AddEditPet'>;
 
 export const AddEditPetScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation();
     const route = useRoute<Route>();
     const { petId, ownerId: initialOwnerId } = route.params || {};
@@ -103,10 +105,10 @@ export const AddEditPetScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <ArrowLeft size={24} color={Colors.light.text} />
+                    <ArrowLeft size={24} color={theme.text} />
                 </TouchableOpacity>
                 <AppText variant="h2">{isEditing ? 'Editar Pet' : 'Novo Pet'}</AppText>
             </View>
@@ -118,22 +120,27 @@ export const AddEditPetScreen = () => {
                 <ScrollView contentContainerStyle={styles.form}>
                     {/* Owner Selection */}
                     <View style={styles.pickerContainer}>
-                        <AppText variant="caption" style={styles.label}>Tutor *</AppText>
-                        <View style={[styles.pickerWrapper, errors.owner ? styles.errorBorder : null]}>
+                        <AppText variant="caption" style={[styles.label, { color: theme.textSecondary }]}>Tutor *</AppText>
+                        <View style={[
+                            styles.pickerWrapper,
+                            { backgroundColor: theme.surface, borderColor: theme.border },
+                            errors.owner ? { borderColor: theme.danger } : null
+                        ]}>
                             <Picker
                                 selectedValue={selectedOwnerId}
                                 onValueChange={(itemValue: number | undefined) => setSelectedOwnerId(itemValue)}
                                 enabled={!initialOwnerId || isEditing}
-                                style={styles.picker}
+                                style={[styles.picker, { color: theme.text }]}
+                                dropdownIconColor={theme.primary}
                             >
-                                <Picker.Item label="Selecione um tutor..." value={undefined} />
+                                <Picker.Item label="Selecione um tutor..." value={undefined} color={theme.textMuted} />
                                 {owners.map((owner) => (
-                                    <Picker.Item key={owner.id} label={owner.name} value={owner.id} />
+                                    <Picker.Item key={owner.id} label={owner.name} value={owner.id} color={theme.text} />
                                 ))}
                             </Picker>
                         </View>
-                        {errors.owner && <AppText variant="caption" color={Colors.light.error}>{errors.owner}</AppText>}
-                        {(!isEditing && initialOwnerId) && <AppText variant="caption" color={Colors.light.textMuted} style={{ marginTop: 4 }}>Tutor fixado pelo contexto.</AppText>}
+                        {errors.owner && <AppText variant="caption" color={theme.danger}>{errors.owner}</AppText>}
+                        {(!isEditing && initialOwnerId) && <AppText variant="caption" color={theme.textMuted} style={{ marginTop: 4 }}>Tutor fixado pelo contexto.</AppText>}
                     </View>
 
                     <AppInput
@@ -188,7 +195,6 @@ export const AddEditPetScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.light.background,
     },
     header: {
         flexDirection: 'row',
@@ -207,7 +213,6 @@ const styles = StyleSheet.create({
     },
     label: {
         marginBottom: Spacing.xs,
-        color: Colors.light.textSecondary,
         fontWeight: '600',
     },
     pickerContainer: {
@@ -215,16 +220,11 @@ const styles = StyleSheet.create({
     },
     pickerWrapper: {
         borderWidth: 1.5,
-        borderColor: Colors.light.border,
         borderRadius: 12,
-        backgroundColor: Colors.light.surface,
         overflow: 'hidden', // for borderRadius
     },
     picker: {
         // Styles for picker if needed
-    },
-    errorBorder: {
-        borderColor: Colors.light.error,
     },
     actions: {
         marginTop: Spacing.lg,

@@ -19,10 +19,12 @@ import { Colors, Spacing } from '../../constants/Colors';
 import { ownerDao } from '../../storage/daos/ownerDao';
 import { ClientsStackParamList } from '../../navigation/types';
 import { formatPhone } from '../../utils/format';
+import { useTheme } from '../../hooks/useTheme';
 
 type Route = RouteProp<ClientsStackParamList, 'AddEditClient'>;
 
 export const AddEditClientScreen = () => {
+    const { theme } = useTheme();
     const navigation = useNavigation();
     const route = useRoute<Route>();
     const ownerId = route.params?.ownerId;
@@ -104,11 +106,11 @@ export const AddEditClientScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <ArrowLeft size={24} color={Colors.light.text} />
+                    <ArrowLeft size={24} color={theme.text} />
                 </TouchableOpacity>
                 <AppText variant="h2">{isEditing ? 'Editar Tutor' : 'Novo Tutor'}</AppText>
             </View>
@@ -152,15 +154,15 @@ export const AddEditClientScreen = () => {
                         multiline
                     />
 
-                    <View style={styles.switchRow}>
+                    <View style={[styles.switchRow, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                         <View>
                             <AppText variant="body" style={{ fontWeight: '600' }}>Clubinho</AppText>
-                            <AppText variant="caption" color={Colors.light.textMuted}>Cliente Premium</AppText>
+                            <AppText variant="caption" color={theme.textMuted}>Cliente Premium</AppText>
                         </View>
                         <Switch
                             value={isClubinho}
                             onValueChange={setIsClubinho}
-                            trackColor={{ false: Colors.light.border, true: Colors.light.primary }}
+                            trackColor={{ false: theme.border, true: theme.primary }}
                         />
                     </View>
 
@@ -187,7 +189,6 @@ export const AddEditClientScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.light.background,
     },
     header: {
         flexDirection: 'row',
@@ -213,9 +214,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: Spacing.md,
         padding: Spacing.md,
-        backgroundColor: Colors.light.surface,
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: Colors.light.border,
     },
 });
