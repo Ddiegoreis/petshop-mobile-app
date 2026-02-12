@@ -55,7 +55,7 @@ export const AgendaScreen = () => {
                 start: format(startDate, 'yyyy-MM-dd HH:mm:ss'),
                 end: format(endDate, 'yyyy-MM-dd HH:mm:ss'),
                 title: app.petName,
-                summary: `${app.serviceType}${app.isClubinho ? '👑' : ''}`,
+                summary: `${app.serviceType}${app.isClubinho ? ' 👑' : ''}`,
                 color: color,
                 appointmentId: app.id,
             };
@@ -161,13 +161,13 @@ export const AgendaScreen = () => {
                 <View style={styles.timelineContainer}>
                     <Timeline
                         date={selectedDate}
-                        format24h={true}
                         events={events}
                         onEventPress={onEventPress}
-                        scrollToFirst={true}
-                        start={0}
-                        end={24}
                         theme={timelineTheme}
+                        format24h={true}
+                        scrollToFirst={true}
+                        start={7}
+                        end={19}
                     />
                 </View>
             </CalendarProvider>

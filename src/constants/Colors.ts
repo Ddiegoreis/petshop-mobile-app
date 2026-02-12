@@ -38,7 +38,7 @@ export const Colors = {
         divider: '#F0E6F1',       // Very light lavender
 
         // Semantic
-        success: '#14BEBB',       // Teal — success states
+        success: '#0d817f',       // Teal — success states
         error: '#D32F2F',         // Red — errors
         danger: '#E94560',        // Premium attention color
         warning: '#F5A623',       // Amber — warnings
@@ -77,7 +77,7 @@ export const Colors = {
         divider: '#2F1A36',
 
         // Semantic
-        success: '#5DD9D6',
+        success: '#0d817f',
         error: '#EF5350',
         danger: '#FF4D6D',
         warning: '#FFB74D',
