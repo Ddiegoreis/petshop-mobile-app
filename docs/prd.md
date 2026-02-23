@@ -45,6 +45,18 @@ Managing pet information, appointments, and payments manually (paper/spreadsheet
   - Dashboard for overdue payments.
   - Payment history per client.
 
+### 5.4. Backup & Restore
+- **Manual Backup (Export)**:
+  - Export all database tables as a JSON file.
+  - Use the device's native share sheet (Google Drive, WhatsApp, etc.) to save/send the backup.
+  - Clean up temporary backup files after sharing.
+- **Manual Restore (Import)**:
+  - Select a previously exported JSON backup file.
+  - Validate structure and table compatibility before restoring.
+  - Replace all current data with the backup data inside a database transaction (rollback on error).
+  - Display confirmation dialog before overwriting data.
+  - Show clear success/error messages.
+
 ## 6. Non-Functional Requirements
 - **Platform**: iOS and Android (via Expo).
 - **Performance**: Fast load times, smooth transitions.
@@ -53,5 +65,5 @@ Managing pet information, appointments, and payments manually (paper/spreadsheet
 
 ## 7. Future Scope
 - Push notifications for appointment reminders.
-- Cloud synchronization/Backup.
+- Cloud synchronization.
 - Client-facing app for owners to book appointments directly.

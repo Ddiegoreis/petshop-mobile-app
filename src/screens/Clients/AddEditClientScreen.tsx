@@ -162,7 +162,8 @@ export const AddEditClientScreen = () => {
                         <Switch
                             value={isClubinho}
                             onValueChange={setIsClubinho}
-                            trackColor={{ false: theme.border, true: theme.primary }}
+                            trackColor={{ false: theme.border, true: theme.primaryDark }}
+                            thumbColor={theme.primary}
                         />
                     </View>
 

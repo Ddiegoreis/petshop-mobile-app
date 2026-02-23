@@ -3,6 +3,7 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 // ─── Home Stack ───────────────────────────────────────────
 export type HomeStackParamList = {
     HomeScreen: undefined;
+    Backup: undefined;
 };
 
 // ─── Clients Stack ────────────────────────────────────────

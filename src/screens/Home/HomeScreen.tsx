@@ -6,7 +6,7 @@ import { AppText } from '../../components/ui/Typography';
 import { AppCard } from '../../components/ui/Card';
 import { AppButton } from '../../components/ui/Button';
 import { Colors, Spacing } from '../../constants/Colors';
-import { Dog, Users, Clock, Crown } from 'lucide-react-native';
+import { Dog, Users, Clock, Crown, Database } from 'lucide-react-native';
 import { appointmentDao, AppointmentWithDetails } from '../../storage/daos/appointmentDao';
 import { useTheme } from '../../hooks/useTheme';
 
@@ -105,6 +105,13 @@ export const HomeScreen = () => {
                         <AppCard style={styles.menuItem}>
                             <Dog size={32} color={theme.primary} />
                             <AppText variant="h3" style={styles.menuLabel}>Pets</AppText>
+                        </AppCard>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Backup')} style={[styles.menuTouchable, { marginTop: Spacing.md }]}>
+                        <AppCard style={styles.menuItem}>
+                            <Database size={32} color={theme.primary} />
+                            <AppText variant="h3" style={styles.menuLabel}>Backup</AppText>
                         </AppCard>
                     </TouchableOpacity>
                 </View>
