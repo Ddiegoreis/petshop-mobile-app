@@ -112,9 +112,12 @@ export const DatabaseBackupService = {
 
             let backupData: BackupData;
             try {
-                backupData = JSON.parse(jsonString);
-            } catch {
-                return { success: false, message: 'Arquivo JSON inválido. Verifique o formato do backup.' };
+                // Strip trailing commas (common in hand-edited JSON)
+                const sanitized = jsonString.replace(/,\s*([\]}])/g, '$1');
+                backupData = JSON.parse(sanitized);
+            } catch (e) {
+                const detail = e instanceof Error ? e.message : '';
+                return { success: false, message: `Arquivo JSON inválido: ${detail}` };
             }
 
             // 3. Validate backup structure
