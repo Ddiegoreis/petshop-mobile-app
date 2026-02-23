@@ -1,4 +1,4 @@
-import { eq, and, gte, lte, desc, getTableColumns } from 'drizzle-orm';
+import { eq, and, gte, lte, desc, getTableColumns, notInArray } from 'drizzle-orm';
 import { db } from '../database/connection';
 import { appointments, pets, owners, type Appointment, type NewAppointment } from '../schema';
 
@@ -73,5 +73,21 @@ export const appointmentDao = {
             .where(eq(appointments.petId, petId))
             .orderBy(desc(appointments.date))
             .all();
+    },
+
+    async checkConflict(petId: number, date: string): Promise<boolean> {
+        const result = await db
+            .select()
+            .from(appointments)
+            .where(
+                and(
+                    eq(appointments.petId, petId),
+                    eq(appointments.date, date),
+                    notInArray(appointments.status, ['COMPLETED', 'CANCELLED'])
+                )
+            )
+            .limit(1)
+            .all();
+        return result.length > 0;
     }
 };

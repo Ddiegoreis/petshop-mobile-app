@@ -67,7 +67,10 @@ export const AgendaScreen = () => {
     }, []);
 
     const onEventPress = useCallback((event: any) => {
-        navigation.navigate('AppointmentDetail', { appointmentId: event.appointmentId });
+        console.log('Timeline Event Pressed:', event);
+        if (event?.appointmentId) {
+            navigation.navigate('AppointmentDetail', { appointmentId: event.appointmentId });
+        }
     }, [navigation]);
 
     const calendarTheme = useMemo(() => ({

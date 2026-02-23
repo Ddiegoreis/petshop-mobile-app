@@ -137,6 +137,19 @@ export const AddAppointmentScreen = () => {
         try {
             const fullDateObj = new Date(`${dateStr}T${timeStr}:00`);
             const appointmentsToCreate = generateInstances(fullDateObj);
+
+            for (const app of appointmentsToCreate) {
+                const hasConflict = await appointmentDao.checkConflict(app.petId, app.date);
+                if (hasConflict) {
+                    Alert.alert(
+                        'Pet já possui agendamento',
+                        `O pet já tem um compromisso marcado para este horário. Por favor, escolha outro horário.`
+                    );
+                    setLoading(false);
+                    return;
+                }
+            }
+
             const calendarId = await getCalendarId();
 
             for (const app of appointmentsToCreate) {
