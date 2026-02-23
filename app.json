@@ -23,9 +23,7 @@
       "package": "com.diegoreix.petshopmobileapp"
     },
     "plugins": [
-      [
-        "expo-sqlite"
-      ],
+      "expo-sqlite",
       [
         "expo-splash-screen",
         {
