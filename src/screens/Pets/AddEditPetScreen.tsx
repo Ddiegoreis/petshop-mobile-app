@@ -33,7 +33,7 @@ export const AddEditPetScreen = () => {
 
     const [name, setName] = useState('');
     const [breed, setBreed] = useState('');
-    const [dob, setDob] = useState(''); // Simple text for now, could be DatePicker later
+    const [dob, setDob] = useState('');
     const [notes, setNotes] = useState('');
     const [selectedOwnerId, setSelectedOwnerId] = useState<number | undefined>(initialOwnerId);
     const [owners, setOwners] = useState<Owner[]>([]);

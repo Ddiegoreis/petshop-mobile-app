@@ -108,7 +108,7 @@ export const HomeScreen = () => {
                         </AppCard>
                     </TouchableOpacity>
 
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Backup')} style={[styles.menuTouchable, { marginTop: Spacing.md }]}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('Backup')} style={styles.menuTouchable}>
                         <AppCard style={styles.menuItem}>
                             <Database size={32} color={theme.primary} />
                             <AppText variant="h3" style={styles.menuLabel}>Backup</AppText>
