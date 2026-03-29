@@ -81,4 +81,18 @@ export const paymentDao = {
                 )
             );
     },
+
+    async updateFutureMonthlyFeesAmount(ownerId: number, fromReferenceMonth: string, amount: number): Promise<void> {
+        await db
+            .update(payments)
+            .set({ amount })
+            .where(
+                and(
+                    eq(payments.ownerId, ownerId),
+                    eq(payments.type, 'monthly_fee'),
+                    gte(payments.referenceMonth, fromReferenceMonth),
+                    or(eq(payments.status, 'pending'), eq(payments.status, 'overdue'))
+                )
+            );
+    },
 };

@@ -24,6 +24,10 @@ function nextReferenceMonth(referenceMonth: string): string {
     return FinanceService.getNextReferenceMonth(referenceMonth);
 }
 
+function hasFeeChanged(previousFee: number, nextFee: number): boolean {
+    return Number(previousFee.toFixed(2)) !== Number(nextFee.toFixed(2));
+}
+
 async function ensureCurrentMonthClubinhoIfNeeded(ownerId: number, isClubinho: boolean): Promise<void> {
     if (!isClubinho) {
         return;
@@ -60,6 +64,14 @@ export const ClientService = {
 
         if (previous.isClubinho && data.isClubinho) {
             await FinanceService.ensureClubinhoMonthlyPayment(ownerId, currentReferenceMonth);
+
+            if (hasFeeChanged(previous.clubinhoMonthlyFee, data.clubinhoMonthlyFee)) {
+                await FinanceService.updateFutureClubinhoPaymentsAmount(
+                    ownerId,
+                    nextReferenceMonth(currentReferenceMonth),
+                    data.clubinhoMonthlyFee
+                );
+            }
         }
 
         return owner;

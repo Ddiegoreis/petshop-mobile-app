@@ -130,4 +130,8 @@ export const FinanceService = {
     async cancelFutureClubinhoPayments(ownerId: number, fromReferenceMonth: string): Promise<void> {
         await paymentDao.cancelFutureMonthlyFees(ownerId, fromReferenceMonth);
     },
+
+    async updateFutureClubinhoPaymentsAmount(ownerId: number, fromReferenceMonth: string, amount: number): Promise<void> {
+        await paymentDao.updateFutureMonthlyFeesAmount(ownerId, fromReferenceMonth, amount);
+    },
 };

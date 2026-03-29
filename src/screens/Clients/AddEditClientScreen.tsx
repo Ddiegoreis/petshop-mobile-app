@@ -18,7 +18,7 @@ import { AppButton } from '../../components/ui/Button';
 import { Colors, Spacing } from '../../constants/Colors';
 import { ownerDao } from '../../storage/daos/ownerDao';
 import { ClientsStackParamList } from '../../navigation/types';
-import { formatPhone } from '../../utils/format';
+import { formatPhone, formatCurrency } from '../../utils/format';
 import { useTheme } from '../../hooks/useTheme';
 import { ClientService } from '../../services/ClientService';
 
@@ -48,7 +48,7 @@ export const AddEditClientScreen = () => {
                     setPhone(owner.phone);
                     setAddress(owner.address);
                     setIsClubinho(owner.isClubinho);
-                    setClubinhoMonthlyFee(owner.clubinhoMonthlyFee > 0 ? owner.clubinhoMonthlyFee.toFixed(2).replace('.', ',') : '');
+                    setClubinhoMonthlyFee(owner.clubinhoMonthlyFee > 0 ? formatCurrency(owner.clubinhoMonthlyFee.toFixed(2)) : '');
                 }
             };
             load();
@@ -67,7 +67,7 @@ export const AddEditClientScreen = () => {
             newErrors.address = 'Endereço é obrigatório';
         }
         if (isClubinho) {
-            const numericFee = Number(clubinhoMonthlyFee.replace(',', '.'));
+            const numericFee = Number(clubinhoMonthlyFee.replace(/\./g, '').replace(',', '.'));
             if (!clubinhoMonthlyFee.trim()) {
                 newErrors.clubinhoMonthlyFee = 'Valor mensal é obrigatório para clubinho';
             } else if (Number.isNaN(numericFee) || numericFee <= 0) {
@@ -91,7 +91,7 @@ export const AddEditClientScreen = () => {
 
         setSaving(true);
         try {
-            const parsedFee = Number(clubinhoMonthlyFee.replace(',', '.'));
+            const parsedFee = Number(clubinhoMonthlyFee.replace(/\./g, '').replace(',', '.'));
             const payload = {
                 name,
                 phone,
@@ -187,8 +187,8 @@ export const AddEditClientScreen = () => {
                             placeholder="Ex: 120,00"
                             value={clubinhoMonthlyFee}
                             onChangeText={(text) => {
-                                const normalized = text.replace(/[^0-9,.]/g, '');
-                                setClubinhoMonthlyFee(normalized);
+                                const formatted = formatCurrency(text);
+                                setClubinhoMonthlyFee(formatted);
                                 if (errors.clubinhoMonthlyFee) {
                                     setErrors((prev) => ({ ...prev, clubinhoMonthlyFee: undefined }));
                                 }

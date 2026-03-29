@@ -29,3 +29,28 @@ export const formatPhone = (value: string): string => {
 export const cleanString = (value: string): string => {
     return value.replace(/\D/g, '');
 };
+
+/**
+ * Formata uma string de números para o padrão de moeda brasileiro (ex: 1.234,50)
+ */
+export const formatCurrency = (value: string): string => {
+    let digits = value.replace(/\D/g, '');
+    if (!digits) return '';
+
+    // Remove leading zeros
+    digits = parseInt(digits, 10).toString();
+    if (digits === 'NaN' || !digits) digits = '0';
+
+    // Ensure at least 3 digits to separate cents
+    while (digits.length < 3) {
+        digits = '0' + digits;
+    }
+
+    const decimalPart = digits.slice(-2);
+    let integerPart = digits.slice(0, -2);
+
+    // Add thousands separators
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    return `${integerPart},${decimalPart}`;
+};

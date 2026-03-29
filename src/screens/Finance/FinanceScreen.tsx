@@ -40,6 +40,7 @@ export const FinanceScreen = () => {
         () => FinanceService.formatReferenceMonthLabel(referenceMonth),
         [referenceMonth]
     );
+    const isCurrentMonth = referenceMonth === FinanceService.getCurrentReferenceMonth();
 
     const loadData = useCallback(async () => {
         try {
@@ -70,6 +71,10 @@ export const FinanceScreen = () => {
 
     const goNextMonth = () => {
         setReferenceMonth((current) => FinanceService.getNextReferenceMonth(current));
+    };
+
+    const goCurrentMonth = () => {
+        setReferenceMonth(FinanceService.getCurrentReferenceMonth());
     };
 
     const handleMarkAsPaid = async (paymentId: number) => {
@@ -176,6 +181,22 @@ export const FinanceScreen = () => {
                         <AppText variant="h1">Pagamentos</AppText>
                         <AppText variant="caption" color={theme.textSecondary}>Controle mensal e recorrências</AppText>
                     </View>
+                    <TouchableOpacity
+                        onPress={goCurrentMonth}
+                        disabled={isCurrentMonth}
+                        style={[
+                            styles.currentMonthShortcut,
+                            {
+                                borderColor: theme.primary + '40',
+                                backgroundColor: isCurrentMonth ? theme.surfaceAlt : theme.primary + '15',
+                                opacity: isCurrentMonth ? 0.65 : 1,
+                            },
+                        ]}
+                    >
+                        <AppText variant="caption" color={theme.primary} style={{ fontWeight: '700' }}>
+                            Mês atual
+                        </AppText>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={[styles.monthSwitcher, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -307,6 +328,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: Spacing.md,
         gap: 10,
+    },
+    currentMonthShortcut: {
+        borderWidth: 1,
+        borderRadius: 999,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
     },
     fab: {
         position: 'absolute',
