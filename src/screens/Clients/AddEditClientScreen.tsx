@@ -20,6 +20,7 @@ import { ownerDao } from '../../storage/daos/ownerDao';
 import { ClientsStackParamList } from '../../navigation/types';
 import { formatPhone } from '../../utils/format';
 import { useTheme } from '../../hooks/useTheme';
+import { ClientService } from '../../services/ClientService';
 
 type Route = RouteProp<ClientsStackParamList, 'AddEditClient'>;
 
@@ -34,7 +35,8 @@ export const AddEditClientScreen = () => {
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
     const [isClubinho, setIsClubinho] = useState(false);
-    const [errors, setErrors] = useState<{ name?: string; phone?: string; address?: string }>({});
+    const [clubinhoMonthlyFee, setClubinhoMonthlyFee] = useState('');
+    const [errors, setErrors] = useState<{ name?: string; phone?: string; address?: string; clubinhoMonthlyFee?: string }>({});
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
@@ -46,6 +48,7 @@ export const AddEditClientScreen = () => {
                     setPhone(owner.phone);
                     setAddress(owner.address);
                     setIsClubinho(owner.isClubinho);
+                    setClubinhoMonthlyFee(owner.clubinhoMonthlyFee > 0 ? owner.clubinhoMonthlyFee.toFixed(2).replace('.', ',') : '');
                 }
             };
             load();
@@ -53,7 +56,7 @@ export const AddEditClientScreen = () => {
     }, [ownerId, isEditing]);
 
     const validate = (): boolean => {
-        const newErrors: { name?: string; phone?: string; address?: string } = {};
+        const newErrors: { name?: string; phone?: string; address?: string; clubinhoMonthlyFee?: string } = {};
         if (!name.trim()) {
             newErrors.name = 'Nome é obrigatório';
         }
@@ -63,11 +66,17 @@ export const AddEditClientScreen = () => {
         if (!address.trim()) {
             newErrors.address = 'Endereço é obrigatório';
         }
+        if (isClubinho) {
+            const numericFee = Number(clubinhoMonthlyFee.replace(',', '.'));
+            if (!clubinhoMonthlyFee.trim()) {
+                newErrors.clubinhoMonthlyFee = 'Valor mensal é obrigatório para clubinho';
+            } else if (Number.isNaN(numericFee) || numericFee <= 0) {
+                newErrors.clubinhoMonthlyFee = 'Informe um valor válido maior que zero';
+            }
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-
-
 
     const handlePhoneChange = (text: string) => {
         const formatted = formatPhone(text);
@@ -82,20 +91,19 @@ export const AddEditClientScreen = () => {
 
         setSaving(true);
         try {
+            const parsedFee = Number(clubinhoMonthlyFee.replace(',', '.'));
+            const payload = {
+                name,
+                phone,
+                address,
+                isClubinho,
+                clubinhoMonthlyFee: isClubinho ? parsedFee : 0,
+            };
+
             if (isEditing && ownerId) {
-                await ownerDao.update(ownerId, {
-                    name: name.trim(),
-                    phone: phone.trim(),
-                    address: address.trim(),
-                    isClubinho,
-                });
+                await ClientService.updateOwner(ownerId, payload);
             } else {
-                await ownerDao.create({
-                    name: name.trim(),
-                    phone: phone.trim(),
-                    address: address.trim(),
-                    isClubinho,
-                });
+                await ClientService.createOwner(payload);
             }
             navigation.goBack();
         } catch (error) {
@@ -161,11 +169,34 @@ export const AddEditClientScreen = () => {
                         </View>
                         <Switch
                             value={isClubinho}
-                            onValueChange={setIsClubinho}
+                            onValueChange={(value) => {
+                                setIsClubinho(value);
+                                if (!value) {
+                                    setClubinhoMonthlyFee('');
+                                    setErrors((prev) => ({ ...prev, clubinhoMonthlyFee: undefined }));
+                                }
+                            }}
                             trackColor={{ false: theme.border, true: theme.primaryDark }}
                             thumbColor={theme.primary}
                         />
                     </View>
+
+                    {isClubinho && (
+                        <AppInput
+                            label="Valor mensal do clubinho *"
+                            placeholder="Ex: 120,00"
+                            value={clubinhoMonthlyFee}
+                            onChangeText={(text) => {
+                                const normalized = text.replace(/[^0-9,.]/g, '');
+                                setClubinhoMonthlyFee(normalized);
+                                if (errors.clubinhoMonthlyFee) {
+                                    setErrors((prev) => ({ ...prev, clubinhoMonthlyFee: undefined }));
+                                }
+                            }}
+                            error={errors.clubinhoMonthlyFee}
+                            keyboardType="decimal-pad"
+                        />
+                    )}
 
                     <View style={styles.actions}>
                         <AppButton

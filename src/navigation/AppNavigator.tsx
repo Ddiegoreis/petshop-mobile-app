@@ -71,14 +71,14 @@ export const AppNavigator = () => {
                     tabBarIcon: ({ color, size }) => <Calendar size={size} color={color} />,
                 }}
             />
-            {/* <Tab.Screen
-            name="Finance"
-            component={FinanceStack}
-            options={{
-                tabBarLabel: 'Finanças',
-                tabBarIcon: ({ color, size }) => <DollarSign size={size} color={color} />,
-            }}
-        /> */}
+            <Tab.Screen
+                name="Finance"
+                component={FinanceStack}
+                options={{
+                    tabBarLabel: 'Finanças',
+                    tabBarIcon: ({ color, size }) => <DollarSign size={size} color={color} />,
+                }}
+            />
         </Tab.Navigator>
     );
 };

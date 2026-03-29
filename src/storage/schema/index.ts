@@ -6,6 +6,7 @@ export const owners = sqliteTable('owners', {
     phone: text('phone').notNull(),
     address: text('address').notNull(),
     isClubinho: integer('is_clubinho', { mode: 'boolean' }).notNull().default(false),
+    clubinhoMonthlyFee: real('clubinho_monthly_fee').notNull().default(0),
     createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
@@ -33,10 +34,12 @@ export const appointments = sqliteTable('appointments', {
 export const payments = sqliteTable('payments', {
     id: integer('id').primaryKey({ autoIncrement: true }),
     ownerId: integer('owner_id').notNull().references(() => owners.id, { onDelete: 'cascade' }),
+    description: text('description').notNull(),
     amount: real('amount').notNull(),
     date: integer('date', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
     type: text('type', { enum: ['service', 'monthly_fee'] }).notNull(),
-    status: text('status', { enum: ['pending', 'paid', 'overdue'] }).notNull().$default(() => 'pending'),
+    status: text('status', { enum: ['pending', 'paid', 'overdue', 'cancelled'] }).notNull().$default(() => 'pending'),
+    paidAt: integer('paid_at', { mode: 'timestamp' }),
     referenceMonth: text('reference_month'), // e.g., '2026-02'
 });
 
