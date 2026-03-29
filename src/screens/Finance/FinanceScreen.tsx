@@ -174,7 +174,7 @@ export const FinanceScreen = () => {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.content}>
                 <View style={styles.headerRow}>
                     <View>
@@ -229,6 +229,7 @@ export const FinanceScreen = () => {
                 </View>
 
                 <FlatList
+                    style={{ flex: 1 }}
                     data={payments}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}

@@ -128,6 +128,7 @@ export const PetsListScreen = () => {
             // Flat list for single owner
             return (
                 <FlatList
+                    style={{ flex: 1 }}
                     data={filtered}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderPetItem}
@@ -139,6 +140,7 @@ export const PetsListScreen = () => {
         // Section list for global view
         return (
             <SectionList
+                style={{ flex: 1 }}
                 sections={sections}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderPetItem}
@@ -150,7 +152,7 @@ export const PetsListScreen = () => {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <View style={styles.headerTop}>
                     {filterOwnerId && (

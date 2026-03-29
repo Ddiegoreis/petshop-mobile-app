@@ -144,7 +144,7 @@ export const AgendaScreen = () => {
     }), [selectedDate, appointments.length]);
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <AppText variant="h1">Agenda</AppText>
             </View>

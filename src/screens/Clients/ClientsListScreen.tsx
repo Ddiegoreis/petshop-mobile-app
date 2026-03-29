@@ -96,7 +96,7 @@ export const ClientsListScreen = () => {
     );
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <AppText variant="h1">Tutores</AppText>
                 <AppText variant="caption" color={theme.textSecondary}>
@@ -116,6 +116,7 @@ export const ClientsListScreen = () => {
             </View>
 
             <FlatList
+                style={{ flex: 1 }}
                 data={filtered}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderItem}
