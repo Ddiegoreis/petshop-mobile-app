@@ -169,17 +169,16 @@ export const FinanceScreen = () => {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}> 
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.content}>
                 <View style={styles.headerRow}>
                     <View>
                         <AppText variant="h1">Pagamentos</AppText>
                         <AppText variant="caption" color={theme.textSecondary}>Controle mensal e recorrências</AppText>
                     </View>
-                    <AppButton title="Lançar serviço" onPress={handleOpenServiceModal} style={styles.addButton} />
                 </View>
 
-                <View style={[styles.monthSwitcher, { backgroundColor: theme.surface, borderColor: theme.border }]}> 
+                <View style={[styles.monthSwitcher, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                     <TouchableOpacity onPress={goPrevMonth} style={styles.monthBtn}>
                         <ChevronLeft size={20} color={theme.text} />
                     </TouchableOpacity>
@@ -231,63 +230,70 @@ export const FinanceScreen = () => {
                     animationType="fade"
                     onRequestClose={handleCloseServiceModal}
                 >
-                    <KeyboardAvoidingView 
+                    <KeyboardAvoidingView
                         style={styles.modalOverlay}
                         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                     >
                         <Pressable style={StyleSheet.absoluteFill} onPress={handleCloseServiceModal} />
                         <View style={[styles.modalCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-                        <AppText variant="h3" style={{ marginBottom: Spacing.sm }}>Novo serviço</AppText>
+                            <AppText variant="h3" style={{ marginBottom: Spacing.sm }}>Novo serviço</AppText>
 
-                        <View style={styles.ownerChips}>
-                            {owners.map((owner) => {
-                                const selected = owner.id === modal.ownerId;
-                                return (
-                                    <TouchableOpacity
-                                        key={owner.id}
-                                        style={[
-                                            styles.ownerChip,
-                                            {
-                                                borderColor: selected ? theme.primary : theme.border,
-                                                backgroundColor: selected ? theme.primary + '1A' : theme.surface,
-                                            },
-                                        ]}
-                                        onPress={() => setModal((current) => ({ ...current, ownerId: owner.id }))}
-                                    >
-                                        <AppText
-                                            variant="caption"
-                                            style={{ fontWeight: '600' }}
-                                            color={selected ? theme.primary : theme.text}
+                            <View style={styles.ownerChips}>
+                                {owners.map((owner) => {
+                                    const selected = owner.id === modal.ownerId;
+                                    return (
+                                        <TouchableOpacity
+                                            key={owner.id}
+                                            style={[
+                                                styles.ownerChip,
+                                                {
+                                                    borderColor: selected ? theme.primary : theme.border,
+                                                    backgroundColor: selected ? theme.primary + '1A' : theme.surface,
+                                                },
+                                            ]}
+                                            onPress={() => setModal((current) => ({ ...current, ownerId: owner.id }))}
                                         >
-                                            {owner.name}
-                                        </AppText>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
+                                            <AppText
+                                                variant="caption"
+                                                style={{ fontWeight: '600' }}
+                                                color={selected ? theme.primary : theme.text}
+                                            >
+                                                {owner.name}
+                                            </AppText>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
 
-                        <AppInput
-                            label="Descrição"
-                            value={modal.description}
-                            onChangeText={(description) => setModal((current) => ({ ...current, description }))}
-                            placeholder="Ex: Banho e tosa"
-                        />
-                        <AppInput
-                            label="Valor"
-                            value={modal.amount}
-                            onChangeText={(amount) => setModal((current) => ({ ...current, amount: amount.replace(/[^0-9,.]/g, '') }))}
-                            placeholder="Ex: 80,00"
-                            keyboardType="decimal-pad"
-                        />
+                            <AppInput
+                                label="Descrição"
+                                value={modal.description}
+                                onChangeText={(description) => setModal((current) => ({ ...current, description }))}
+                                placeholder="Ex: Banho e tosa"
+                            />
+                            <AppInput
+                                label="Valor"
+                                value={modal.amount}
+                                onChangeText={(amount) => setModal((current) => ({ ...current, amount: amount.replace(/[^0-9,.]/g, '') }))}
+                                placeholder="Ex: 80,00"
+                                keyboardType="decimal-pad"
+                            />
 
-                        <View style={styles.modalActions}>
-                            <AppButton title="Cancelar" variant="ghost" onPress={handleCloseServiceModal} style={{ flex: 1 }} />
-                            <AppButton title="Salvar" onPress={handleCreateServicePayment} style={{ flex: 1 }} />
-                        </View>
+                            <View style={styles.modalActions}>
+                                <AppButton title="Cancelar" variant="ghost" onPress={handleCloseServiceModal} style={{ flex: 1 }} />
+                                <AppButton title="Salvar" onPress={handleCreateServicePayment} style={{ flex: 1 }} />
+                            </View>
                         </View>
                     </KeyboardAvoidingView>
                 </Modal>
             </View>
+
+            <TouchableOpacity
+                style={[styles.fab, { backgroundColor: theme.primary, shadowColor: theme.primary, zIndex: 10 }]}
+                onPress={handleOpenServiceModal}
+            >
+                <Plus size={28} color="#FFF" />
+            </TouchableOpacity>
         </SafeAreaView>
     );
 };
@@ -302,9 +308,19 @@ const styles = StyleSheet.create({
         marginBottom: Spacing.md,
         gap: 10,
     },
-    addButton: {
-        minHeight: 44,
-        paddingHorizontal: 14,
+    fab: {
+        position: 'absolute',
+        right: Spacing.lg,
+        bottom: Spacing.lg,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 6,
     },
     monthSwitcher: {
         borderWidth: 1,

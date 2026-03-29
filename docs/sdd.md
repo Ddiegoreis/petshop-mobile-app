@@ -76,3 +76,4 @@ handles complex business logic independent of UI.
 
 ## 6. UI & Design Patterns
 - **Modals**: All application modals must use the native `Modal` from `react-native`. They must include a darkened backdrop overlay (`rgba(0,0,0,0.6)`) that dismisses the modal when pressed, utilize a smooth `fade` animation (`animationType="fade"`), and be wrapped in a `KeyboardAvoidingView` to prevent the device keyboard from overlapping the content.
+- **Floating Action Buttons (FAB)**: Primary creation actions on any screen (such as adding a client, registering a pet, or launching a new service) must use a Floating Action Button instead of an inline header button. The FAB must be positioned at the absolute bottom right of the screen (inside the SafeAreaView boundaries) and maintain a consistent styling (circular, shadow elevation, and primary theme color background).
