@@ -73,3 +73,6 @@ handles complex business logic independent of UI.
 ## 5. Security & Privacy
 - Local-first architecture (SQLite).
 - Data validation at Service layer.
+
+## 6. UI & Design Patterns
+- **Modals**: All application modals must use the native `Modal` from `react-native`. They must include a darkened backdrop overlay (`rgba(0,0,0,0.6)`) that dismisses the modal when pressed, utilize a smooth `fade` animation (`animationType="fade"`), and be wrapped in a `KeyboardAvoidingView` to prevent the device keyboard from overlapping the content.

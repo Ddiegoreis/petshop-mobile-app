@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Alert, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { Check, ChevronLeft, ChevronRight, Crown, Plus } from 'lucide-react-native';
@@ -225,8 +225,18 @@ export const FinanceScreen = () => {
                     }
                 />
 
-                {modal.open ? (
-                    <View style={[styles.modalCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                <Modal
+                    visible={modal.open}
+                    transparent
+                    animationType="fade"
+                    onRequestClose={handleCloseServiceModal}
+                >
+                    <KeyboardAvoidingView 
+                        style={styles.modalOverlay}
+                        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    >
+                        <Pressable style={StyleSheet.absoluteFill} onPress={handleCloseServiceModal} />
+                        <View style={[styles.modalCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                         <AppText variant="h3" style={{ marginBottom: Spacing.sm }}>Novo serviço</AppText>
 
                         <View style={styles.ownerChips}>
@@ -274,8 +284,9 @@ export const FinanceScreen = () => {
                             <AppButton title="Cancelar" variant="ghost" onPress={handleCloseServiceModal} style={{ flex: 1 }} />
                             <AppButton title="Salvar" onPress={handleCreateServicePayment} style={{ flex: 1 }} />
                         </View>
-                    </View>
-                ) : null}
+                        </View>
+                    </KeyboardAvoidingView>
+                </Modal>
             </View>
         </SafeAreaView>
     );
@@ -365,11 +376,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingTop: 70,
     },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        justifyContent: 'flex-end',
+        padding: Spacing.lg,
+    },
     modalCard: {
-        position: 'absolute',
-        left: Spacing.lg,
-        right: Spacing.lg,
-        bottom: Spacing.lg,
         borderRadius: 16,
         borderWidth: 1,
         padding: Spacing.md,
