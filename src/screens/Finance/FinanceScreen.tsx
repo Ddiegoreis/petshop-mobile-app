@@ -322,7 +322,7 @@ export const FinanceScreen = () => {
 
 const styles = StyleSheet.create({
     container: { flex: 1 },
-    content: { flex: 1, padding: Spacing.lg },
+    content: { flex: 1, paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg },
     headerRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
