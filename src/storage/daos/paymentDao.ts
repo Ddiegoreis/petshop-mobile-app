@@ -6,6 +6,7 @@ export type PaymentStatus = 'pending' | 'paid' | 'overdue' | 'cancelled';
 
 export type PaymentWithOwner = Payment & {
     ownerName: string;
+    ownerPhone: string;
 };
 
 export const paymentDao = {
@@ -14,6 +15,7 @@ export const paymentDao = {
             .select({
                 ...getTableColumns(payments),
                 ownerName: owners.name,
+                ownerPhone: owners.phone,
             })
             .from(payments)
             .leftJoin(owners, eq(payments.ownerId, owners.id))
@@ -32,7 +34,7 @@ export const paymentDao = {
     async markAsPaid(paymentId: number, paidAt: Date): Promise<Payment> {
         const result = await db
             .update(payments)
-            .set({ status: 'paid', paidAt })
+            .set({ status: 'paid', paidAt, receiptIssuedAt: null })
             .where(eq(payments.id, paymentId))
             .returning();
 
@@ -42,7 +44,17 @@ export const paymentDao = {
     async markAsOpen(paymentId: number): Promise<Payment> {
         const result = await db
             .update(payments)
-            .set({ status: 'pending', paidAt: null })
+            .set({ status: 'pending', paidAt: null, receiptIssuedAt: null })
+            .where(eq(payments.id, paymentId))
+            .returning();
+
+        return result[0];
+    },
+
+    async markReceiptIssued(paymentId: number, issuedAt: Date): Promise<Payment> {
+        const result = await db
+            .update(payments)
+            .set({ receiptIssuedAt: issuedAt })
             .where(eq(payments.id, paymentId))
             .returning();
 

@@ -1,5 +1,7 @@
 import { paymentDao, type PaymentStatus, type PaymentWithOwner } from '../storage/daos/paymentDao';
 import { ownerDao } from '../storage/daos/ownerDao';
+import { petDao } from '../storage/daos/petDao';
+import { ReceiptService } from './ReceiptService';
 
 type CreateServicePaymentInput = {
     ownerId: number;
@@ -106,6 +108,26 @@ export const FinanceService = {
 
     async markPaymentAsOpen(paymentId: number) {
         return paymentDao.markAsOpen(paymentId);
+    },
+
+    async generateAndShareReceipt(payment: PaymentWithOwner): Promise<void> {
+        if (payment.status !== 'paid' || !payment.paidAt) {
+            throw new Error('Somente pagamentos marcados como pagos podem emitir recibo.');
+        }
+
+        const pets = await petDao.getByOwnerId(payment.ownerId);
+        await ReceiptService.generateAndShare({
+            paymentId: payment.id,
+            ownerName: payment.ownerName,
+            ownerPhone: payment.ownerPhone,
+            petNames: pets.map((pet) => pet.name),
+            description: payment.description,
+            amount: payment.amount,
+            paidAt: new Date(payment.paidAt),
+            referenceMonth: payment.referenceMonth,
+        });
+
+        await paymentDao.markReceiptIssued(payment.id, new Date());
     },
 
     async ensureClubinhoMonthlyPayment(ownerId: number, referenceMonth: string): Promise<void> {

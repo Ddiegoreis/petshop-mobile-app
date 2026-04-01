@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { Check, ChevronLeft, ChevronRight, Crown, Plus, RotateCcw } from 'lucide-react-native';
+import { Check, ChevronLeft, ChevronRight, Crown, Plus, Receipt, RotateCcw } from 'lucide-react-native';
 import { AppText } from '../../components/ui/Typography';
 import { AppCard } from '../../components/ui/Card';
 import { AppButton } from '../../components/ui/Button';
@@ -95,6 +95,36 @@ export const FinanceScreen = () => {
         }
     };
 
+    const handleGenerateReceipt = async (payment: PaymentWithOwner) => {
+        try {
+            await FinanceService.generateAndShareReceipt(payment);
+            await loadData();
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Não foi possível gerar o recibo.';
+            Alert.alert('Erro', message);
+        }
+    };
+
+    const confirmReopenPayment = (payment: PaymentWithOwner) => {
+        if (!payment.receiptIssuedAt) {
+            handleMarkAsOpen(payment.id);
+            return;
+        }
+
+        Alert.alert(
+            'Confirmar desfazer pagamento',
+            'Este serviço já teve um recibo emitido. Deseja realmente desfazer o pagamento?',
+            [
+                { text: 'Cancelar', style: 'cancel' },
+                {
+                    text: 'Desfazer',
+                    style: 'destructive',
+                    onPress: () => handleMarkAsOpen(payment.id),
+                },
+            ]
+        );
+    };
+
     const handleOpenServiceModal = () => {
         setModal({ ...initialModalState, open: true });
     };
@@ -173,15 +203,26 @@ export const FinanceScreen = () => {
                     )}
 
                     {item.status === 'paid' && (
-                        <TouchableOpacity
-                            style={[styles.payButton, { backgroundColor: theme.warning }]}
-                            onPress={() => handleMarkAsOpen(item.id)}
-                        >
-                            <RotateCcw size={14} color="#fff" />
-                            <AppText variant="caption" color="#fff" style={{ fontWeight: '700' }}>
-                                Reabrir
-                            </AppText>
-                        </TouchableOpacity>
+                        <View style={styles.paidActionsRow}>
+                            <TouchableOpacity
+                                style={[styles.payButton, { backgroundColor: theme.tertiary }]}
+                                onPress={() => handleGenerateReceipt(item)}
+                            >
+                                <Receipt size={14} color="#fff" />
+                                <AppText variant="caption" color="#fff" style={{ fontWeight: '700' }}>
+                                    Recibo
+                                </AppText>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.payButton, { backgroundColor: theme.warning }]}
+                                onPress={() => confirmReopenPayment(item)}
+                            >
+                                <RotateCcw size={14} color="#fff" />
+                                <AppText variant="caption" color="#fff" style={{ fontWeight: '700' }}>
+                                    Reabrir
+                                </AppText>
+                            </TouchableOpacity>
+                        </View>
                     )}
                 </View>
 
@@ -435,6 +476,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 6,
         borderRadius: 8,
+    },
+    paidActionsRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
     },
     empty: {
         alignItems: 'center',

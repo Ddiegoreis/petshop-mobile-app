@@ -40,6 +40,7 @@ export const payments = sqliteTable('payments', {
     type: text('type', { enum: ['service', 'monthly_fee'] }).notNull(),
     status: text('status', { enum: ['pending', 'paid', 'overdue', 'cancelled'] }).notNull().$default(() => 'pending'),
     paidAt: integer('paid_at', { mode: 'timestamp' }),
+    receiptIssuedAt: integer('receipt_issued_at', { mode: 'timestamp' }),
     referenceMonth: text('reference_month'), // e.g., '2026-02'
 });
 
