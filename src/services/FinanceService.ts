@@ -104,6 +104,10 @@ export const FinanceService = {
         return paymentDao.markAsPaid(paymentId, paidAt);
     },
 
+    async markPaymentAsOpen(paymentId: number) {
+        return paymentDao.markAsOpen(paymentId);
+    },
+
     async ensureClubinhoMonthlyPayment(ownerId: number, referenceMonth: string): Promise<void> {
         const owner = await ownerDao.getById(ownerId);
         if (!owner || !owner.isClubinho || owner.clubinhoMonthlyFee <= 0) {

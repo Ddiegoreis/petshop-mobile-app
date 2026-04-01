@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { Check, ChevronLeft, ChevronRight, Crown, Plus } from 'lucide-react-native';
+import { Check, ChevronLeft, ChevronRight, Crown, Plus, RotateCcw } from 'lucide-react-native';
 import { AppText } from '../../components/ui/Typography';
 import { AppCard } from '../../components/ui/Card';
 import { AppButton } from '../../components/ui/Button';
@@ -86,6 +86,15 @@ export const FinanceScreen = () => {
         }
     };
 
+    const handleMarkAsOpen = async (paymentId: number) => {
+        try {
+            await FinanceService.markPaymentAsOpen(paymentId);
+            await loadData();
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível reabrir este pagamento.');
+        }
+    };
+
     const handleOpenServiceModal = () => {
         setModal({ ...initialModalState, open: true });
     };
@@ -159,6 +168,18 @@ export const FinanceScreen = () => {
                             <Check size={14} color="#fff" />
                             <AppText variant="caption" color="#fff" style={{ fontWeight: '700' }}>
                                 Marcar como pago
+                            </AppText>
+                        </TouchableOpacity>
+                    )}
+
+                    {item.status === 'paid' && (
+                        <TouchableOpacity
+                            style={[styles.payButton, { backgroundColor: theme.warning }]}
+                            onPress={() => handleMarkAsOpen(item.id)}
+                        >
+                            <RotateCcw size={14} color="#fff" />
+                            <AppText variant="caption" color="#fff" style={{ fontWeight: '700' }}>
+                                Reabrir
                             </AppText>
                         </TouchableOpacity>
                     )}
@@ -386,7 +407,7 @@ const styles = StyleSheet.create({
     paymentHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         gap: 12,
         marginBottom: Spacing.sm,
     },

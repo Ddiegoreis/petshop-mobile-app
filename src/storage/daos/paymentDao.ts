@@ -39,6 +39,16 @@ export const paymentDao = {
         return result[0];
     },
 
+    async markAsOpen(paymentId: number): Promise<Payment> {
+        const result = await db
+            .update(payments)
+            .set({ status: 'pending', paidAt: null })
+            .where(eq(payments.id, paymentId))
+            .returning();
+
+        return result[0];
+    },
+
     async markOverdueBefore(referenceMonth: string): Promise<void> {
         await db
             .update(payments)
