@@ -1,7 +1,7 @@
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { Asset } from 'expo-asset';
-import { File } from 'expo-file-system';
+import { File, Paths } from 'expo-file-system';
 
 type ReceiptData = {
     paymentId: number;
@@ -188,17 +188,16 @@ export const ReceiptService = {
 
         const file = await Print.printToFileAsync({ html });
         const fileName = `${sanitizeFilePart(data.ownerName)}_${formatPaymentDateForFile(data.paidAt)}_recibo.pdf`;
-        const receiptFile = new File(file.uri);
-        let shareUri = file.uri;
+        const sourceFile = new File(file.uri);
+        const namedFile = new File(Paths.cache, fileName);
 
-        try {
-            receiptFile.rename(fileName);
-            shareUri = receiptFile.uri;
-        } catch {
-            shareUri = file.uri;
+        if (namedFile.exists) {
+            namedFile.delete();
         }
 
-        await Sharing.shareAsync(shareUri, {
+        sourceFile.copy(namedFile);
+
+        await Sharing.shareAsync(namedFile.uri, {
             mimeType: 'application/pdf',
             dialogTitle: 'Compartilhar recibo',
             UTI: '.pdf',
