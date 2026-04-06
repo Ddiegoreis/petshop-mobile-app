@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { Check, ChevronLeft, ChevronRight, Crown, Plus, Receipt, RotateCcw } from 'lucide-react-native';
+import { Check, ChevronLeft, ChevronRight, Crown, Eye, EyeOff, Plus, Receipt, RotateCcw } from 'lucide-react-native';
 import { AppText } from '../../components/ui/Typography';
 import { AppCard } from '../../components/ui/Card';
 import { AppButton } from '../../components/ui/Button';
@@ -35,6 +35,7 @@ export const FinanceScreen = () => {
     const [owners, setOwners] = useState<Owner[]>([]);
     const [summary, setSummary] = useState({ total: 0, paid: 0, open: 0, cancelled: 0 });
     const [modal, setModal] = useState<ModalState>(initialModalState);
+    const [hideValues, setHideValues] = useState(false);
 
     const monthLabel = useMemo(
         () => FinanceService.formatReferenceMonthLabel(referenceMonth),
@@ -171,6 +172,8 @@ export const FinanceScreen = () => {
         return { label: 'Pendente', color: theme.info };
     };
 
+    const renderMoney = (value: number) => (hideValues ? '••••••' : `R$ ${value.toFixed(2).replace('.', ',')}`);
+
     const renderItem = ({ item }: { item: PaymentWithOwner }) => {
         const status = renderStatus(item.status);
         return (
@@ -183,7 +186,7 @@ export const FinanceScreen = () => {
                         </View>
                         <AppText variant="caption" color={theme.textMuted}>{item.ownerName}</AppText>
                     </View>
-                    <AppText variant="h3">R$ {item.amount.toFixed(2).replace('.', ',')}</AppText>
+                    <AppText variant="h3">{renderMoney(item.amount)}</AppText>
                 </View>
 
                 <View style={styles.paymentFooter}>
@@ -243,22 +246,36 @@ export const FinanceScreen = () => {
                         <AppText variant="h1">Pagamentos</AppText>
                         <AppText variant="caption" color={theme.textSecondary}>Controle mensal e recorrências</AppText>
                     </View>
-                    <TouchableOpacity
-                        onPress={goCurrentMonth}
-                        disabled={isCurrentMonth}
-                        style={[
-                            styles.currentMonthShortcut,
-                            {
-                                borderColor: theme.primary + '40',
-                                backgroundColor: isCurrentMonth ? theme.surfaceAlt : theme.primary + '15',
-                                opacity: isCurrentMonth ? 0.65 : 1,
-                            },
-                        ]}
-                    >
-                        <AppText variant="caption" color={theme.primary} style={{ fontWeight: '700' }}>
-                            Mês atual
-                        </AppText>
-                    </TouchableOpacity>
+                    <View style={styles.headerActions}>
+                        <TouchableOpacity
+                            onPress={() => setHideValues((current) => !current)}
+                            style={[
+                                styles.currentMonthShortcut,
+                                {
+                                    borderColor: theme.border,
+                                    backgroundColor: theme.surface,
+                                },
+                            ]}
+                        >
+                            {hideValues ? <EyeOff size={16} color={theme.text} /> : <Eye size={16} color={theme.text} />}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={goCurrentMonth}
+                            disabled={isCurrentMonth}
+                            style={[
+                                styles.currentMonthShortcut,
+                                {
+                                    borderColor: theme.primary + '40',
+                                    backgroundColor: isCurrentMonth ? theme.surfaceAlt : theme.primary + '15',
+                                    opacity: isCurrentMonth ? 0.65 : 1,
+                                },
+                            ]}
+                        >
+                            <AppText variant="caption" color={theme.primary} style={{ fontWeight: '700' }}>
+                                Mês atual
+                            </AppText>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <View style={[styles.monthSwitcher, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -274,19 +291,19 @@ export const FinanceScreen = () => {
                 <View style={styles.summaryGrid}>
                     <AppCard padding="md" style={styles.summaryCard}>
                         <AppText variant="caption" color={theme.textMuted}>Total do mês</AppText>
-                        <AppText variant="h3">R$ {summary.total.toFixed(2).replace('.', ',')}</AppText>
+                        <AppText variant="h3">{renderMoney(summary.total)}</AppText>
                     </AppCard>
                     <AppCard padding="md" style={styles.summaryCard}>
                         <AppText variant="caption" color={theme.textMuted}>Recebido</AppText>
-                        <AppText variant="h3" color={theme.success}>R$ {summary.paid.toFixed(2).replace('.', ',')}</AppText>
+                        <AppText variant="h3" color={theme.success}>{renderMoney(summary.paid)}</AppText>
                     </AppCard>
                     <AppCard padding="md" style={styles.summaryCard}>
                         <AppText variant="caption" color={theme.textMuted}>Em aberto</AppText>
-                        <AppText variant="h3" color={theme.warning}>R$ {summary.open.toFixed(2).replace('.', ',')}</AppText>
+                        <AppText variant="h3" color={theme.warning}>{renderMoney(summary.open)}</AppText>
                     </AppCard>
                     <AppCard padding="md" style={styles.summaryCard}>
                         <AppText variant="caption" color={theme.textMuted}>Cancelado</AppText>
-                        <AppText variant="h3" color={theme.textMuted}>R$ {summary.cancelled.toFixed(2).replace('.', ',')}</AppText>
+                        <AppText variant="h3" color={theme.textMuted}>{renderMoney(summary.cancelled)}</AppText>
                     </AppCard>
                 </View>
 
@@ -392,7 +409,15 @@ const styles = StyleSheet.create({
         marginBottom: Spacing.md,
         gap: 10,
     },
+    headerActions: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
     currentMonthShortcut: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
         borderWidth: 1,
         borderRadius: 999,
         paddingHorizontal: 12,
