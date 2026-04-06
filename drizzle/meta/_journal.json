@@ -29,6 +29,13 @@
       "when": 1771100000000,
       "tag": "0003_bent_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1771100000001,
+      "tag": "0004_expenses",
+      "breakpoints": true
     }
   ]
 }

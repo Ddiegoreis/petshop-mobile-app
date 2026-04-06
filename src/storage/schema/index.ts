@@ -44,6 +44,15 @@ export const payments = sqliteTable('payments', {
     referenceMonth: text('reference_month'), // e.g., '2026-02'
 });
 
+export const expenses = sqliteTable('expenses', {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    description: text('description').notNull(),
+    amount: real('amount').notNull(),
+    date: integer('date', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+    status: text('status', { enum: ['pending', 'paid'] }).notNull().default('pending'),
+    referenceMonth: text('reference_month').notNull(),
+});
+
 export type Owner = typeof owners.$inferSelect;
 export type NewOwner = typeof owners.$inferInsert;
 export type Pet = typeof pets.$inferSelect;
@@ -52,3 +61,5 @@ export type Appointment = typeof appointments.$inferSelect;
 export type NewAppointment = typeof appointments.$inferInsert;
 export type Payment = typeof payments.$inferSelect;
 export type NewPayment = typeof payments.$inferInsert;
+export type Expense = typeof expenses.$inferSelect;
+export type NewExpense = typeof expenses.$inferInsert;

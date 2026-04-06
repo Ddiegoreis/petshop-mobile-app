@@ -56,7 +56,7 @@ Each screen folder is a self-contained module containing:
 handles complex business logic independent of UI.
 - `ClientService`: Orchestrates Owner/Pet rules.
 - `ScheduleService`: Algorithms for slot availability.
-- `FinanceService`: Calculations for reports.
+- `FinanceService`: Calculates monthly revenues, expenses, and final balance.
 - `DatabaseBackupService`: Handles export (JSON) and import (restore) of the SQLite database via `expo-file-system`, `expo-sharing`, and `expo-document-picker`.
 
 ### 3.3. Storage Layer (`src/storage`)

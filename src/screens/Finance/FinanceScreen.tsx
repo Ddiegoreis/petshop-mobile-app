@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Modal, Platform, Pressable, SectionList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { Check, ChevronLeft, ChevronRight, Crown, Eye, EyeOff, Plus, Receipt, RotateCcw } from 'lucide-react-native';
+import { ArrowDownRight, Check, ChevronLeft, ChevronRight, Crown, Eye, EyeOff, Plus, Receipt, RotateCcw } from 'lucide-react-native';
 import { AppText } from '../../components/ui/Typography';
 import { AppCard } from '../../components/ui/Card';
 import { AppButton } from '../../components/ui/Button';
@@ -13,27 +13,33 @@ import { FinanceService } from '../../services/FinanceService';
 import { ownerDao } from '../../storage/daos/ownerDao';
 import { type Owner } from '../../storage/schema';
 import { type PaymentWithOwner } from '../../storage/daos/paymentDao';
+import { type ExpenseStatus } from '../../storage/daos/expenseDao';
+import { type FinanceEntry } from '../../services/FinanceService';
 
 type ModalState = {
     open: boolean;
+    mode: 'service' | 'expense';
     ownerId?: number;
     description: string;
     amount: string;
+    expenseStatus: ExpenseStatus;
 };
 
 const initialModalState: ModalState = {
     open: false,
+    mode: 'service',
     description: '',
     amount: '',
+    expenseStatus: 'pending',
 };
 
 export const FinanceScreen = () => {
     const { theme } = useTheme();
     const [referenceMonth, setReferenceMonth] = useState(FinanceService.getCurrentReferenceMonth());
-    const [payments, setPayments] = useState<PaymentWithOwner[]>([]);
+    const [entries, setEntries] = useState<FinanceEntry[]>([]);
     const [loading, setLoading] = useState(false);
     const [owners, setOwners] = useState<Owner[]>([]);
-    const [summary, setSummary] = useState({ total: 0, paid: 0, open: 0, cancelled: 0 });
+    const [summary, setSummary] = useState({ revenue: 0, expenses: 0, balance: 0, paid: 0, open: 0, cancelled: 0 });
     const [modal, setModal] = useState<ModalState>(initialModalState);
     const [hideValues, setHideValues] = useState(false);
 
@@ -48,13 +54,14 @@ export const FinanceScreen = () => {
             setLoading(true);
             const [ownersData, financeData] = await Promise.all([
                 ownerDao.getAll(),
-                FinanceService.getMonthlyPayments(referenceMonth),
+                FinanceService.getMonthlyFinance(referenceMonth),
             ]);
             setOwners(ownersData);
-            setPayments(financeData.payments);
+            setEntries(financeData.entries);
             setSummary(financeData.summary);
         } catch (error) {
-            Alert.alert('Erro', 'Não foi possível carregar os pagamentos.');
+            const message = error instanceof Error ? error.message : 'Não foi possível carregar as finanças.';
+            Alert.alert('Erro', message);
         } finally {
             setLoading(false);
         }
@@ -127,7 +134,11 @@ export const FinanceScreen = () => {
     };
 
     const handleOpenServiceModal = () => {
-        setModal({ ...initialModalState, open: true });
+        setModal({ ...initialModalState, open: true, mode: 'service' });
+    };
+
+    const handleOpenExpenseModal = () => {
+        setModal({ ...initialModalState, open: true, mode: 'expense' });
     };
 
     const handleCloseServiceModal = () => {
@@ -135,13 +146,8 @@ export const FinanceScreen = () => {
     };
 
     const handleCreateServicePayment = async () => {
-        if (!modal.ownerId) {
-            Alert.alert('Atenção', 'Selecione um tutor para lançar o serviço.');
-            return;
-        }
-
         if (!modal.description.trim()) {
-            Alert.alert('Atenção', 'Informe a descrição do serviço.');
+            Alert.alert('Atenção', modal.mode === 'service' ? 'Informe a descrição do serviço.' : 'Informe a descrição da saída.');
             return;
         }
 
@@ -152,48 +158,82 @@ export const FinanceScreen = () => {
         }
 
         try {
-            await FinanceService.createServicePayment({
-                ownerId: modal.ownerId,
-                description: modal.description,
-                amount,
-                referenceMonth,
-            });
+            if (modal.mode === 'service') {
+                if (!modal.ownerId) {
+                    Alert.alert('Atenção', 'Selecione um tutor para lançar o serviço.');
+                    return;
+                }
+
+                await FinanceService.createServicePayment({
+                    ownerId: modal.ownerId,
+                    description: modal.description,
+                    amount,
+                    referenceMonth,
+                });
+            } else {
+                await FinanceService.createExpense({
+                    description: modal.description,
+                    amount,
+                    status: modal.expenseStatus,
+                    referenceMonth,
+                });
+            }
             handleCloseServiceModal();
             await loadData();
         } catch (error) {
-            Alert.alert('Erro', 'Não foi possível lançar o serviço.');
+            Alert.alert('Erro', modal.mode === 'service' ? 'Não foi possível lançar o serviço.' : 'Não foi possível lançar a saída.');
         }
     };
 
-    const renderStatus = (status: PaymentWithOwner['status']) => {
+    const renderStatus = (status: PaymentWithOwner['status'] | ExpenseStatus) => {
         if (status === 'paid') return { label: 'Pago', color: theme.success };
         if (status === 'overdue') return { label: 'Atrasado', color: theme.warning };
         if (status === 'cancelled') return { label: 'Cancelado', color: theme.textMuted };
         return { label: 'Pendente', color: theme.info };
     };
 
-    const renderMoney = (value: number) => (hideValues ? '••••••' : `R$ ${value.toFixed(2).replace('.', ',')}`);
+    const renderMoney = (value?: number | null, negative = false) => {
+        if (hideValues) return '••••••';
+        const safeValue = Number(value ?? 0);
+        if (!Number.isFinite(safeValue)) {
+            return 'R$ 0,00';
+        }
+        const prefix = negative ? '- ' : '';
+        return `${prefix}R$ ${safeValue.toFixed(2).replace('.', ',')}`;
+    };
 
-    const renderItem = ({ item }: { item: PaymentWithOwner }) => {
+    const renderItem = ({ item }: { item: FinanceEntry }) => {
+        const isExpense = item.kind === 'expense';
         const status = renderStatus(item.status);
         return (
             <AppCard padding="md" style={styles.paymentCard}>
                 <View style={styles.paymentHeader}>
                     <View style={{ flex: 1 }}>
                         <View style={styles.paymentTitleRow}>
-                            {item.type === 'monthly_fee' ? <Crown size={14} color={theme.primary} /> : null}
+                            {isExpense ? <ArrowDownRight size={14} color={theme.warning} /> : item.type === 'monthly_fee' ? <Crown size={14} color={theme.primary} /> : null}
                             <AppText variant="body" style={{ fontWeight: '600' }}>{item.description}</AppText>
                         </View>
-                        <AppText variant="caption" color={theme.textMuted}>{item.ownerName}</AppText>
+                        {isExpense ? (
+                            <AppText variant="caption" color={theme.textMuted}>Saída da loja</AppText>
+                        ) : (
+                            <AppText variant="caption" color={theme.textMuted}>{item.ownerName}</AppText>
+                        )}
                     </View>
-                    <AppText variant="h3">{renderMoney(item.amount)}</AppText>
+                    <AppText variant="h3" color={isExpense ? theme.warning : undefined}>{renderMoney(item.amount, isExpense)}</AppText>
                 </View>
 
                 <View style={styles.paymentFooter}>
-                    <View style={[styles.statusTag, { borderColor: status.color + '55', backgroundColor: status.color + '16' }]}>
-                        <AppText variant="caption" style={{ color: status.color, fontWeight: '700' }}>{status.label}</AppText>
+                    <View style={styles.footerLeft}>
+                        <View style={[styles.statusTag, { borderColor: status.color + '55', backgroundColor: status.color + '16' }]}>
+                            <AppText variant="caption" style={{ color: status.color, fontWeight: '700' }}>{status.label}</AppText>
+                        </View>
+                        {isExpense ? (
+                            <View style={[styles.expenseTag, { borderColor: theme.warning + '40', backgroundColor: theme.warning + '12' }]}>
+                                <AppText variant="caption" style={{ color: theme.warning, fontWeight: '700' }}>Saída</AppText>
+                            </View>
+                        ) : null}
                     </View>
-                    {item.status !== 'paid' && item.status !== 'cancelled' && (
+                    {!isExpense && item.status !== 'paid' && item.status !== 'cancelled' && (
                         <TouchableOpacity
                             style={[styles.payButton, { backgroundColor: theme.success }]}
                             onPress={() => handleMarkAsPaid(item.id)}
@@ -205,7 +245,7 @@ export const FinanceScreen = () => {
                         </TouchableOpacity>
                     )}
 
-                    {item.status === 'paid' && (
+                    {!isExpense && item.status === 'paid' && (
                         <View style={styles.paidActionsRow}>
                             <TouchableOpacity
                                 style={[styles.payButton, { backgroundColor: theme.tertiary }]}
@@ -227,9 +267,33 @@ export const FinanceScreen = () => {
                             </TouchableOpacity>
                         </View>
                     )}
+
+                    {isExpense && item.status !== 'paid' && (
+                        <TouchableOpacity
+                            style={[styles.payButton, { backgroundColor: theme.warning }]}
+                            onPress={() => FinanceService.markExpenseAsPaid(item.id).then(loadData).catch(() => Alert.alert('Erro', 'Não foi possível marcar esta saída como paga.'))}
+                        >
+                            <Check size={14} color="#fff" />
+                            <AppText variant="caption" color="#fff" style={{ fontWeight: '700' }}>
+                                Marcar como paga
+                            </AppText>
+                        </TouchableOpacity>
+                    )}
+
+                    {isExpense && item.status === 'paid' && (
+                        <TouchableOpacity
+                            style={[styles.payButton, { backgroundColor: theme.textSecondary }]}
+                            onPress={() => FinanceService.markExpenseAsOpen(item.id).then(loadData).catch(() => Alert.alert('Erro', 'Não foi possível reabrir esta saída.'))}
+                        >
+                            <RotateCcw size={14} color="#fff" />
+                            <AppText variant="caption" color="#fff" style={{ fontWeight: '700' }}>
+                                Reabrir
+                            </AppText>
+                        </TouchableOpacity>
+                    )}
                 </View>
 
-                {item.paidAt ? (
+                {!isExpense && item.paidAt ? (
                     <AppText variant="caption" color={theme.textMuted}>
                         Pago em {new Date(item.paidAt).toLocaleDateString('pt-BR')}
                     </AppText>
@@ -238,13 +302,21 @@ export const FinanceScreen = () => {
         );
     };
 
+    const serviceEntries = entries.filter((entry): entry is Extract<FinanceEntry, { kind: 'service' }> => entry.kind === 'service');
+    const expenseEntries = entries.filter((entry): entry is Extract<FinanceEntry, { kind: 'expense' }> => entry.kind === 'expense');
+
+    const sections = [
+        { title: 'Serviços', data: serviceEntries },
+        { title: 'Saídas', data: expenseEntries },
+    ].filter((section) => section.data.length > 0);
+
     return (
         <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.content}>
                 <View style={styles.headerRow}>
                     <View>
-                        <AppText variant="h1">Pagamentos</AppText>
-                        <AppText variant="caption" color={theme.textSecondary}>Controle mensal e recorrências</AppText>
+                        <AppText variant="h1">Finanças</AppText>
+                        <AppText variant="caption" color={theme.textSecondary}>Controle mensal, receitas e despesas</AppText>
                     </View>
                     <View style={styles.headerActions}>
                         <TouchableOpacity
@@ -290,36 +362,43 @@ export const FinanceScreen = () => {
 
                 <View style={styles.summaryGrid}>
                     <AppCard padding="md" style={styles.summaryCard}>
-                        <AppText variant="caption" color={theme.textMuted}>Total do mês</AppText>
-                        <AppText variant="h3">{renderMoney(summary.total)}</AppText>
+                        <AppText variant="caption" color={theme.textMuted}>Receitas</AppText>
+                        <AppText variant="h3" color={theme.success}>{renderMoney(summary.revenue ?? 0)}</AppText>
                     </AppCard>
                     <AppCard padding="md" style={styles.summaryCard}>
-                        <AppText variant="caption" color={theme.textMuted}>Recebido</AppText>
-                        <AppText variant="h3" color={theme.success}>{renderMoney(summary.paid)}</AppText>
+                        <AppText variant="caption" color={theme.textMuted}>Despesas</AppText>
+                        <AppText variant="h3" color={theme.warning}>{renderMoney(summary.expenses ?? 0, true)}</AppText>
+                    </AppCard>
+                    <AppCard padding="md" style={styles.summaryCard}>
+                        <AppText variant="caption" color={theme.textMuted}>Saldo final</AppText>
+                        <AppText variant="h3" color={(summary.balance ?? 0) >= 0 ? theme.success : theme.warning}>{renderMoney(Math.abs(summary.balance ?? 0), (summary.balance ?? 0) < 0)}</AppText>
                     </AppCard>
                     <AppCard padding="md" style={styles.summaryCard}>
                         <AppText variant="caption" color={theme.textMuted}>Em aberto</AppText>
-                        <AppText variant="h3" color={theme.warning}>{renderMoney(summary.open)}</AppText>
-                    </AppCard>
-                    <AppCard padding="md" style={styles.summaryCard}>
-                        <AppText variant="caption" color={theme.textMuted}>Cancelado</AppText>
-                        <AppText variant="h3" color={theme.textMuted}>{renderMoney(summary.cancelled)}</AppText>
+                        <AppText variant="h3" color={theme.warning}>{renderMoney(summary.open ?? 0)}</AppText>
                     </AppCard>
                 </View>
 
-                <FlatList
+                <SectionList
                     style={{ flex: 1 }}
-                    data={payments}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
                     refreshing={loading}
                     onRefresh={loadData}
+                    sections={sections}
+                    renderSectionHeader={({ section }) => (
+                        <View style={styles.sectionHeader}>
+                            <AppText variant="caption" color={theme.textMuted} style={{ fontWeight: '700', textTransform: 'uppercase' }}>
+                                {section.title}
+                            </AppText>
+                        </View>
+                    )}
                     contentContainerStyle={styles.list}
                     ListEmptyComponent={
                         <View style={styles.empty}>
                             <Plus size={28} color={theme.border} />
                             <AppText variant="body" color={theme.textMuted} style={{ marginTop: Spacing.sm }}>
-                                {loading ? 'Carregando pagamentos...' : 'Nenhum pagamento neste mês'}
+                                {loading ? 'Carregando finanças...' : 'Nenhum lançamento neste mês'}
                             </AppText>
                         </View>
                     }
@@ -337,40 +416,60 @@ export const FinanceScreen = () => {
                     >
                         <Pressable style={StyleSheet.absoluteFill} onPress={handleCloseServiceModal} />
                         <View style={[styles.modalCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-                            <AppText variant="h3" style={{ marginBottom: Spacing.sm }}>Novo serviço</AppText>
-
-                            <View style={styles.ownerChips}>
-                                {owners.map((owner) => {
-                                    const selected = owner.id === modal.ownerId;
-                                    return (
-                                        <TouchableOpacity
-                                            key={owner.id}
-                                            style={[
-                                                styles.ownerChip,
-                                                {
-                                                    borderColor: selected ? theme.primary : theme.border,
-                                                    backgroundColor: selected ? theme.primary + '1A' : theme.surface,
-                                                },
-                                            ]}
-                                            onPress={() => setModal((current) => ({ ...current, ownerId: owner.id }))}
-                                        >
-                                            <AppText
-                                                variant="caption"
-                                                style={{ fontWeight: '600' }}
-                                                color={selected ? theme.primary : theme.text}
-                                            >
-                                                {owner.name}
-                                            </AppText>
-                                        </TouchableOpacity>
-                                    );
-                                })}
+                            <View style={styles.modalTitleRow}>
+                                <AppText variant="h3">{modal.mode === 'service' ? 'Novo serviço' : 'Nova saída'}</AppText>
+                                <View style={[styles.modePill, { borderColor: theme.border, backgroundColor: theme.surfaceAlt }]}>
+                                    <TouchableOpacity
+                                        onPress={() => setModal((current) => ({ ...current, mode: 'service' }))}
+                                        style={[styles.modePillButton, modal.mode === 'service' && { backgroundColor: theme.primary }]}
+                                    >
+                                        <AppText variant="caption" style={{ fontWeight: '700' }} color={modal.mode === 'service' ? '#fff' : theme.text}>Serviço</AppText>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => setModal((current) => ({ ...current, mode: 'expense' }))}
+                                        style={[styles.modePillButton, modal.mode === 'expense' && { backgroundColor: theme.warning }]}
+                                    >
+                                        <AppText variant="caption" style={{ fontWeight: '700' }} color={modal.mode === 'expense' ? '#fff' : theme.text}>Saída</AppText>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
+
+                            {modal.mode === 'service' ? (
+                                <>
+                                    <View style={styles.ownerChips}>
+                                        {owners.map((owner) => {
+                                            const selected = owner.id === modal.ownerId;
+                                            return (
+                                                <TouchableOpacity
+                                                    key={owner.id}
+                                                    style={[
+                                                        styles.ownerChip,
+                                                        {
+                                                            borderColor: selected ? theme.primary : theme.border,
+                                                            backgroundColor: selected ? theme.primary + '1A' : theme.surface,
+                                                        },
+                                                    ]}
+                                                    onPress={() => setModal((current) => ({ ...current, ownerId: owner.id }))}
+                                                >
+                                                    <AppText
+                                                        variant="caption"
+                                                        style={{ fontWeight: '600' }}
+                                                        color={selected ? theme.primary : theme.text}
+                                                    >
+                                                        {owner.name}
+                                                    </AppText>
+                                                </TouchableOpacity>
+                                            );
+                                        })}
+                                    </View>
+                                </>
+                            ) : null}
 
                             <AppInput
                                 label="Descrição"
                                 value={modal.description}
                                 onChangeText={(description) => setModal((current) => ({ ...current, description }))}
-                                placeholder="Ex: Banho e tosa"
+                                placeholder={modal.mode === 'service' ? 'Ex: Banho e tosa' : 'Ex: Compra de materiais'}
                             />
                             <AppInput
                                 label="Valor"
@@ -379,6 +478,35 @@ export const FinanceScreen = () => {
                                 placeholder="Ex: 80,00"
                                 keyboardType="decimal-pad"
                             />
+
+                            {modal.mode === 'expense' ? (
+                                <View style={styles.expenseStatusRow}>
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.statusChoice,
+                                            {
+                                                borderColor: modal.expenseStatus === 'pending' ? theme.warning : theme.border,
+                                                backgroundColor: modal.expenseStatus === 'pending' ? theme.warning + '14' : theme.surface,
+                                            },
+                                        ]}
+                                        onPress={() => setModal((current) => ({ ...current, expenseStatus: 'pending' }))}
+                                    >
+                                        <AppText variant="caption" style={{ fontWeight: '700' }} color={modal.expenseStatus === 'pending' ? theme.warning : theme.text}>Pendente</AppText>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.statusChoice,
+                                            {
+                                                borderColor: modal.expenseStatus === 'paid' ? theme.success : theme.border,
+                                                backgroundColor: modal.expenseStatus === 'paid' ? theme.success + '14' : theme.surface,
+                                            },
+                                        ]}
+                                        onPress={() => setModal((current) => ({ ...current, expenseStatus: 'paid' }))}
+                                    >
+                                        <AppText variant="caption" style={{ fontWeight: '700' }} color={modal.expenseStatus === 'paid' ? theme.success : theme.text}>Paga</AppText>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : null}
 
                             <View style={styles.modalActions}>
                                 <AppButton title="Cancelar" variant="ghost" onPress={handleCloseServiceModal} style={{ flex: 1 }} />
@@ -394,6 +522,12 @@ export const FinanceScreen = () => {
                 onPress={handleOpenServiceModal}
             >
                 <Plus size={28} color="#FFF" />
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.secondaryFab, { backgroundColor: theme.warning, shadowColor: theme.warning, zIndex: 10 }]}
+                onPress={handleOpenExpenseModal}
+            >
+                <ArrowDownRight size={24} color="#FFF" />
             </TouchableOpacity>
         </SafeAreaView>
     );
@@ -413,6 +547,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 8,
+    },
+    footerLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        flexWrap: 'wrap',
+        flex: 1,
     },
     currentMonthShortcut: {
         flexDirection: 'row',
@@ -434,6 +575,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 6,
+    },
+    secondaryFab: {
+        position: 'absolute',
+        right: Spacing.lg,
+        bottom: Spacing.lg + 72,
+        width: 52,
+        height: 52,
+        borderRadius: 26,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
         shadowRadius: 8,
         elevation: 6,
     },
@@ -467,6 +622,10 @@ const styles = StyleSheet.create({
         paddingTop: Spacing.md,
         paddingBottom: 130,
     },
+    sectionHeader: {
+        paddingTop: Spacing.sm,
+        paddingBottom: Spacing.xs,
+    },
     paymentCard: {
         marginBottom: Spacing.sm,
     },
@@ -489,6 +648,12 @@ const styles = StyleSheet.create({
         marginBottom: Spacing.xs,
     },
     statusTag: {
+        borderWidth: 1,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 999,
+    },
+    expenseTag: {
         borderWidth: 1,
         paddingHorizontal: 10,
         paddingVertical: 4,
@@ -523,6 +688,25 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: Spacing.md,
     },
+    modalTitleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 12,
+        marginBottom: Spacing.sm,
+    },
+    modePill: {
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderRadius: 999,
+        padding: 4,
+        gap: 4,
+    },
+    modePillButton: {
+        borderRadius: 999,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+    },
     ownerChips: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -534,6 +718,18 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         paddingHorizontal: 10,
         paddingVertical: 6,
+    },
+    expenseStatusRow: {
+        flexDirection: 'row',
+        gap: 8,
+        marginTop: Spacing.xs,
+    },
+    statusChoice: {
+        flex: 1,
+        borderWidth: 1,
+        borderRadius: 12,
+        paddingVertical: 10,
+        alignItems: 'center',
     },
     modalActions: {
         flexDirection: 'row',

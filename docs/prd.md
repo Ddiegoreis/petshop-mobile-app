@@ -42,8 +42,10 @@ Managing pet information, appointments, and payments manually (paper/spreadsheet
 - **Monthly Payments**:
   - Track monthly fees for recurring clients (e.g., daycare/walking packages).
   - Record individual service payments.
+  - Record store expenses (e.g., materials, suppliers, operating costs).
   - Dashboard for overdue payments.
   - Payment history per client.
+  - Monthly balance considering revenues and expenses.
 
 ### 5.4. Backup & Restore
 - **Manual Backup (Export)**:

@@ -1,4 +1,5 @@
 import { paymentDao, type PaymentStatus, type PaymentWithOwner } from '../storage/daos/paymentDao';
+import { expenseDao, type ExpenseStatus } from '../storage/daos/expenseDao';
 import { ownerDao } from '../storage/daos/ownerDao';
 import { petDao } from '../storage/daos/petDao';
 import { ReceiptService } from './ReceiptService';
@@ -11,8 +12,29 @@ type CreateServicePaymentInput = {
     referenceMonth: string;
 };
 
+type CreateExpenseInput = {
+    description: string;
+    amount: number;
+    status?: ExpenseStatus;
+    referenceMonth: string;
+};
+
+export type FinanceEntry =
+    | ({ kind: 'service' } & PaymentWithOwner)
+    | {
+          kind: 'expense';
+          id: number;
+          description: string;
+          amount: number;
+          date: Date;
+          status: ExpenseStatus;
+          referenceMonth: string;
+      };
+
 export type MonthlyFinanceSummary = {
-    total: number;
+    revenue: number;
+    expenses: number;
+    balance: number;
     paid: number;
     open: number;
     cancelled: number;
@@ -34,11 +56,9 @@ function addMonths(referenceMonth: string, delta: number): string {
 }
 
 function calculateSummary(payments: PaymentWithOwner[]): MonthlyFinanceSummary {
+    const revenue = payments.reduce((acc, current) => (current.status === 'cancelled' ? acc : acc + current.amount), 0);
     return payments.reduce<MonthlyFinanceSummary>(
         (acc, current) => {
-            if (current.status !== 'cancelled') {
-                acc.total += current.amount;
-            }
             if (current.status === 'paid') {
                 acc.paid += current.amount;
             }
@@ -50,7 +70,7 @@ function calculateSummary(payments: PaymentWithOwner[]): MonthlyFinanceSummary {
             }
             return acc;
         },
-        { total: 0, paid: 0, open: 0, cancelled: 0 }
+        { revenue, expenses: 0, balance: revenue, paid: 0, open: 0, cancelled: 0 }
     );
 }
 
@@ -89,6 +109,40 @@ export const FinanceService = {
         return { payments, summary };
     },
 
+    async getMonthlyFinance(referenceMonth: string): Promise<{ entries: FinanceEntry[]; summary: MonthlyFinanceSummary }> {
+        if (referenceMonth >= this.getCurrentReferenceMonth()) {
+            const owners = await ownerDao.getAll();
+            for (const owner of owners) {
+                if (owner.isClubinho && owner.clubinhoMonthlyFee > 0) {
+                    await this.ensureClubinhoMonthlyPayment(owner.id, referenceMonth);
+                }
+            }
+        }
+
+        await paymentDao.markOverdueBefore(this.getCurrentReferenceMonth());
+        const payments = await paymentDao.getByReferenceMonth(referenceMonth);
+        const paymentsData = { payments, summary: calculateSummary(payments) };
+        const expensesData = await expenseDao.getByReferenceMonth(referenceMonth);
+
+        const entries: FinanceEntry[] = [
+            ...paymentsData.payments.map((payment) => ({ kind: 'service' as const, ...payment })),
+            ...expensesData.map((expense) => ({ kind: 'expense' as const, ...expense })),
+        ].sort((left, right) => {
+            const leftTime = new Date(left.date).getTime();
+            const rightTime = new Date(right.date).getTime();
+            if (rightTime !== leftTime) return rightTime - leftTime;
+            return right.id - left.id;
+        });
+
+        const summary = {
+            ...paymentsData.summary,
+            expenses: expensesData.reduce((acc, current) => acc + current.amount, 0),
+        };
+        summary.balance = summary.revenue - summary.expenses;
+
+        return { entries, summary };
+    },
+
     async createServicePayment(input: CreateServicePaymentInput) {
         return paymentDao.create({
             ownerId: input.ownerId,
@@ -102,12 +156,30 @@ export const FinanceService = {
         });
     },
 
+    async createExpense(input: CreateExpenseInput) {
+        return expenseDao.create({
+            description: input.description.trim(),
+            amount: input.amount,
+            status: input.status ?? 'pending',
+            date: new Date(),
+            referenceMonth: input.referenceMonth,
+        });
+    },
+
     async markPaymentAsPaid(paymentId: number, paidAt: Date = new Date()) {
         return paymentDao.markAsPaid(paymentId, paidAt);
     },
 
     async markPaymentAsOpen(paymentId: number) {
         return paymentDao.markAsOpen(paymentId);
+    },
+
+    async markExpenseAsPaid(expenseId: number) {
+        return expenseDao.markAsPaid(expenseId);
+    },
+
+    async markExpenseAsOpen(expenseId: number) {
+        return expenseDao.markAsOpen(expenseId);
     },
 
     async generateAndShareReceipt(payment: PaymentWithOwner): Promise<void> {
