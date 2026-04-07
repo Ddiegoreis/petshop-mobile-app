@@ -199,7 +199,7 @@ export const FinanceScreen = () => {
             return 'R$ 0,00';
         }
         const prefix = negative ? '- ' : '';
-        return `${prefix}R$ ${safeValue.toFixed(2).replace('.', ',')}`;
+        return `${prefix}R$ ${safeValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
 
     const renderItem = ({ item }: { item: FinanceEntry }) => {
@@ -316,7 +316,6 @@ export const FinanceScreen = () => {
                 <View style={styles.headerRow}>
                     <View>
                         <AppText variant="h1">Finanças</AppText>
-                        <AppText variant="caption" color={theme.textSecondary}>Controle mensal, receitas e despesas</AppText>
                     </View>
                     <View style={styles.headerActions}>
                         <TouchableOpacity
@@ -350,37 +349,40 @@ export const FinanceScreen = () => {
                     </View>
                 </View>
 
-                <View style={[styles.monthSwitcher, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-                    <TouchableOpacity onPress={goPrevMonth} style={styles.monthBtn}>
-                        <ChevronLeft size={20} color={theme.text} />
-                    </TouchableOpacity>
-                    <AppText variant="h3" style={{ textTransform: 'capitalize' }}>{monthLabel}</AppText>
-                    <TouchableOpacity onPress={goNextMonth} style={styles.monthBtn}>
-                        <ChevronRight size={20} color={theme.text} />
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.summaryGrid}>
-                    <AppCard padding="md" style={styles.summaryCard}>
-                        <AppText variant="caption" color={theme.textMuted}>Receitas</AppText>
-                        <AppText variant="h3" color={theme.success}>{renderMoney(summary.revenue ?? 0)}</AppText>
-                    </AppCard>
-                    <AppCard padding="md" style={styles.summaryCard}>
-                        <AppText variant="caption" color={theme.textMuted}>Despesas</AppText>
-                        <AppText variant="h3" color={theme.warning}>{renderMoney(summary.expenses ?? 0, true)}</AppText>
-                    </AppCard>
-                    <AppCard padding="md" style={styles.summaryCard}>
-                        <AppText variant="caption" color={theme.textMuted}>Saldo final</AppText>
-                        <AppText variant="h3" color={(summary.balance ?? 0) >= 0 ? theme.success : theme.warning}>{renderMoney(Math.abs(summary.balance ?? 0), (summary.balance ?? 0) < 0)}</AppText>
-                    </AppCard>
-                    <AppCard padding="md" style={styles.summaryCard}>
-                        <AppText variant="caption" color={theme.textMuted}>Em aberto</AppText>
-                        <AppText variant="h3" color={theme.warning}>{renderMoney(summary.open ?? 0)}</AppText>
-                    </AppCard>
-                </View>
-
                 <SectionList
                     style={{ flex: 1 }}
+                    ListHeaderComponent={
+                        <View style={{ paddingBottom: Spacing.md }}>
+                            <View style={[styles.monthSwitcher, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                                <TouchableOpacity onPress={goPrevMonth} style={styles.monthBtn}>
+                                    <ChevronLeft size={20} color={theme.text} />
+                                </TouchableOpacity>
+                                <AppText variant="h3" style={{ textTransform: 'capitalize' }}>{monthLabel}</AppText>
+                                <TouchableOpacity onPress={goNextMonth} style={styles.monthBtn}>
+                                    <ChevronRight size={20} color={theme.text} />
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={styles.summaryGrid}>
+                                <AppCard padding="md" style={styles.summaryCard}>
+                                    <AppText variant="caption" color={theme.textMuted}>Receitas</AppText>
+                                      <AppText variant="h3" color={theme.success}>{renderMoney(summary.revenue ?? 0)}</AppText>
+                                </AppCard>
+                                <AppCard padding="md" style={styles.summaryCard}>
+                                    <AppText variant="caption" color={theme.textMuted}>Despesas</AppText>
+                                    <AppText variant="h3" color={theme.warning}>{renderMoney(summary.expenses ?? 0, true)}</AppText>
+                                </AppCard>
+                                <AppCard padding="md" style={styles.summaryCard}>
+                                    <AppText variant="caption" color={theme.textMuted}>Saldo final</AppText>
+                                    <AppText variant="h3" color={(summary.balance ?? 0) >= 0 ? theme.success : theme.warning}>{renderMoney(Math.abs(summary.balance ?? 0), (summary.balance ?? 0) < 0)}</AppText>
+                                </AppCard>
+                                <AppCard padding="md" style={styles.summaryCard}>
+                                    <AppText variant="caption" color={theme.textMuted}>Em aberto</AppText>
+                                    <AppText variant="h3" color={theme.warning}>{renderMoney(summary.open ?? 0)}</AppText>
+                                </AppCard>
+                            </View>
+                        </View>
+                    }
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
                     refreshing={loading}
@@ -619,7 +621,6 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
     list: {
-        paddingTop: Spacing.md,
         paddingBottom: 130,
     },
     sectionHeader: {
