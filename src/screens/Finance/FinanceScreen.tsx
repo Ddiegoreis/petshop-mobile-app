@@ -192,6 +192,36 @@ export const FinanceScreen = () => {
         return { label: 'Pendente', color: theme.info };
     };
 
+    const getDueDateAlert = (payment: PaymentWithOwner): { label: string; color: string } | null => {
+        if (payment.status === 'paid' || payment.status === 'cancelled') {
+            return null;
+        }
+
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const paymentDate = new Date(payment.date);
+        const dueDate = new Date(paymentDate.getFullYear(), paymentDate.getMonth(), paymentDate.getDate());
+        const diffMs = dueDate.getTime() - today.getTime();
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 0) {
+            const overdueDays = Math.abs(diffDays);
+            const label = overdueDays === 1 ? 'Vencido ha 1 dia' : `Vencido ha ${overdueDays} dias`;
+            return { label, color: theme.error };
+        }
+
+        if (diffDays <= 3) {
+            if (diffDays === 0) {
+                return { label: 'Vence hoje', color: theme.warning };
+            }
+
+            const label = diffDays === 1 ? 'Vence em 1 dia' : `Vence em ${diffDays} dias`;
+            return { label, color: theme.warning };
+        }
+
+        return null;
+    };
+
     const renderMoney = (value?: number | null, negative = false) => {
         if (hideValues) return '••••••';
         const safeValue = Number(value ?? 0);
@@ -205,6 +235,7 @@ export const FinanceScreen = () => {
     const renderItem = ({ item }: { item: FinanceEntry }) => {
         const isExpense = item.kind === 'expense';
         const status = renderStatus(item.status);
+        const dueDateAlert = !isExpense ? getDueDateAlert(item) : null;
         return (
             <AppCard padding="md" style={styles.paymentCard}>
                 <View style={styles.paymentHeader}>
@@ -230,6 +261,11 @@ export const FinanceScreen = () => {
                         {isExpense ? (
                             <View style={[styles.expenseTag, { borderColor: theme.warning + '40', backgroundColor: theme.warning + '12' }]}>
                                 <AppText variant="caption" style={{ color: theme.warning, fontWeight: '700' }}>Saída</AppText>
+                            </View>
+                        ) : null}
+                        {dueDateAlert ? (
+                            <View style={[styles.dueDateTag, { borderColor: dueDateAlert.color + '55', backgroundColor: dueDateAlert.color + '16' }]}>
+                                <AppText variant="caption" style={{ color: dueDateAlert.color, fontWeight: '700' }}>{dueDateAlert.label}</AppText>
                             </View>
                         ) : null}
                     </View>
@@ -655,6 +691,12 @@ const styles = StyleSheet.create({
         borderRadius: 999,
     },
     expenseTag: {
+        borderWidth: 1,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 999,
+    },
+    dueDateTag: {
         borderWidth: 1,
         paddingHorizontal: 10,
         paddingVertical: 4,
