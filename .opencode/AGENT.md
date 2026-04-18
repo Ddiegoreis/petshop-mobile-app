@@ -106,3 +106,56 @@ Antes de concluir mudanças:
 Em mudanças relevantes de arquitetura ou produto, atualizar:
 - `docs/prd.md`
 - `docs/sdd.md`
+
+## 10) Orquestração de Workflow (Workflow Orchestration)
+
+### 10.1. Padrão de Modo de Planejamento
+- Entre em modo de planejamento para QUALQUER tarefa não trivial (3+ passos ou decisões arquiteturais).
+- Se algo der errado, PARE e replaneje imediatamente - não continue forçando.
+- Use o modo de planejamento para passos de verificação, não apenas para construção.
+- Escreva especificações detalhadas antecipadamente para reduzir ambiguidades.
+
+### 10.2. Estratégia de Subagentes
+- Use subagentes de forma generosa para manter a janela de contexto principal limpa.
+- Descarregue pesquisa, exploração e análises paralelas para subagentes.
+- Para problemas complexos, direcione mais processamento (compute) através de subagentes.
+- Uma tarefa por subagente para focar a execução.
+
+### 10.3. Ciclo de Auto-Melhoria
+- Após QUALQUER correção feita pelo usuário: atualize `tasks/lessons.md` com o padrão ensinado.
+- Escreva regras para si mesmo que previnam cometer o mesmo erro no futuro.
+- Itere de forma implacável nessas lições até que a taxa de erros caia.
+- Revise as lições no início de cada sessão para o respectivo projeto.
+
+### 10.4. Verificação Antes da Conclusão
+- Nunca marque uma tarefa como completa sem provar que ela funciona.
+- Verifique a diferença (diff) de comportamento entre a branch principal e suas mudanças quando aplicável.
+- Pergunte a si mesmo: "Um Staff Engineer aprovaria isso?"
+- Rode testes, cheque os logs e demonstre a corretude da solução.
+
+### 10.5. Exija Elegância (Balanceada)
+- Para mudanças não triviais: pause e pergunte "existe uma forma mais elegante?"
+- Se uma correção parece uma gambiarra (hacky): "Sabendo de tudo que sei agora, implemente a solução elegante."
+- Pule esta reflexão para correções simples e óbvias - não tente super-projetar (don't over-engineer).
+- Desafie o seu próprio trabalho antes de apresentá-lo.
+
+### 10.6. Correção Autônoma de Bugs
+- Ao receber um relato de bug: apenas conserte. Não peça para ser guiado pela mão.
+- Aponte para logs, erros e testes falhando - e então resolva-os.
+- Nenhuma troca de contexto (context switching) deve ser requerida do usuário.
+- Corrija testes falhando na CI sem precisar ser instruído de como fazê-lo.
+
+## 11) Gerenciamento de Tarefas
+
+1. **Planeje Primeiro**: Escreva o plano em `tasks/todo.md` com itens checáveis.
+2. **Verifique o Plano**: Faça uma checagem antes de começar a implementação.
+3. **Acompanhe o Progresso**: Marque os itens como concluídos conforme você avança.
+4. **Explique as Mudanças**: Forneça um resumo de alto nível em cada etapa.
+5. **Documente os Resultados**: Adicione uma seção de revisão ao `tasks/todo.md`.
+6. **Capture as Lições**: Atualize `tasks/lessons.md` após receber correções do usuário.
+
+## 12) Princípios Essenciais
+
+- **Simplicidade Primeiro**: Faça cada mudança o mais simples possível. Impacte o mínimo de código.
+- **Sem Preguiça**: Encontre as causas raiz. Sem soluções temporárias. Siga os padrões de um desenvolvedor Sênior.
+- **Impacto Mínimo**: As mudanças devem tocar apenas no que é estritamente necessário. Evite introduzir novos bugs.
