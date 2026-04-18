@@ -3,6 +3,7 @@ import { expenseDao, type ExpenseStatus } from '../storage/daos/expenseDao';
 import { ownerDao } from '../storage/daos/ownerDao';
 import { petDao } from '../storage/daos/petDao';
 import { ReceiptService } from './ReceiptService';
+import { buildMonthlyDueDate } from './utils/monthlyDueDate';
 
 type CreateServicePaymentInput = {
     ownerId: number;
@@ -219,7 +220,7 @@ export const FinanceService = {
             amount: owner.clubinhoMonthlyFee,
             type: 'monthly_fee',
             status: 'pending',
-            date: new Date(),
+            date: buildMonthlyDueDate(referenceMonth, owner.clubinhoDueDay),
             referenceMonth,
             paidAt: null,
         });

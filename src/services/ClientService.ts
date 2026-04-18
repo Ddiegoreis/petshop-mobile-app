@@ -1,6 +1,7 @@
 import { ownerDao } from '../storage/daos/ownerDao';
 import { type Owner } from '../storage/schema';
 import { FinanceService } from './FinanceService';
+import { normalizeDueDay } from './utils/clubinho';
 
 type SaveOwnerInput = {
     name: string;
@@ -8,6 +9,7 @@ type SaveOwnerInput = {
     address: string;
     isClubinho: boolean;
     clubinhoMonthlyFee: number;
+    clubinhoDueDay: number;
 };
 
 function normalizeInput(input: SaveOwnerInput): SaveOwnerInput {
@@ -17,6 +19,7 @@ function normalizeInput(input: SaveOwnerInput): SaveOwnerInput {
         address: input.address.trim(),
         isClubinho: input.isClubinho,
         clubinhoMonthlyFee: input.isClubinho ? Number(input.clubinhoMonthlyFee) : 0,
+        clubinhoDueDay: normalizeDueDay(input.clubinhoDueDay),
     };
 }
 

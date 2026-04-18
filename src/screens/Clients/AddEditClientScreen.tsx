@@ -36,7 +36,8 @@ export const AddEditClientScreen = () => {
     const [address, setAddress] = useState('');
     const [isClubinho, setIsClubinho] = useState(false);
     const [clubinhoMonthlyFee, setClubinhoMonthlyFee] = useState('');
-    const [errors, setErrors] = useState<{ name?: string; phone?: string; address?: string; clubinhoMonthlyFee?: string }>({});
+    const [clubinhoDueDay, setClubinhoDueDay] = useState('10');
+    const [errors, setErrors] = useState<{ name?: string; phone?: string; address?: string; clubinhoMonthlyFee?: string; clubinhoDueDay?: string }>({});
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
@@ -49,6 +50,7 @@ export const AddEditClientScreen = () => {
                     setAddress(owner.address);
                     setIsClubinho(owner.isClubinho);
                     setClubinhoMonthlyFee(owner.clubinhoMonthlyFee > 0 ? formatCurrency(owner.clubinhoMonthlyFee.toFixed(2)) : '');
+                    setClubinhoDueDay(String(owner.clubinhoDueDay ?? 10));
                 }
             };
             load();
@@ -56,7 +58,7 @@ export const AddEditClientScreen = () => {
     }, [ownerId, isEditing]);
 
     const validate = (): boolean => {
-        const newErrors: { name?: string; phone?: string; address?: string; clubinhoMonthlyFee?: string } = {};
+        const newErrors: { name?: string; phone?: string; address?: string; clubinhoMonthlyFee?: string; clubinhoDueDay?: string } = {};
         if (!name.trim()) {
             newErrors.name = 'Nome é obrigatório';
         }
@@ -68,10 +70,17 @@ export const AddEditClientScreen = () => {
         }
         if (isClubinho) {
             const numericFee = Number(clubinhoMonthlyFee.replace(/\./g, '').replace(',', '.'));
+            const dueDayNumber = Number(clubinhoDueDay);
             if (!clubinhoMonthlyFee.trim()) {
                 newErrors.clubinhoMonthlyFee = 'Valor mensal é obrigatório para clubinho';
             } else if (Number.isNaN(numericFee) || numericFee <= 0) {
                 newErrors.clubinhoMonthlyFee = 'Informe um valor válido maior que zero';
+            }
+
+            if (!clubinhoDueDay.trim()) {
+                newErrors.clubinhoDueDay = 'Dia de vencimento é obrigatório para clubinho';
+            } else if (!Number.isInteger(dueDayNumber) || dueDayNumber < 1 || dueDayNumber > 31) {
+                newErrors.clubinhoDueDay = 'Informe um dia válido entre 1 e 31';
             }
         }
         setErrors(newErrors);
@@ -98,6 +107,7 @@ export const AddEditClientScreen = () => {
                 address,
                 isClubinho,
                 clubinhoMonthlyFee: isClubinho ? parsedFee : 0,
+                clubinhoDueDay: isClubinho ? Number(clubinhoDueDay) : 10,
             };
 
             if (isEditing && ownerId) {
@@ -173,7 +183,8 @@ export const AddEditClientScreen = () => {
                                 setIsClubinho(value);
                                 if (!value) {
                                     setClubinhoMonthlyFee('');
-                                    setErrors((prev) => ({ ...prev, clubinhoMonthlyFee: undefined }));
+                                    setClubinhoDueDay('10');
+                                    setErrors((prev) => ({ ...prev, clubinhoMonthlyFee: undefined, clubinhoDueDay: undefined }));
                                 }
                             }}
                             trackColor={{ false: theme.border, true: theme.primaryDark }}
@@ -182,20 +193,38 @@ export const AddEditClientScreen = () => {
                     </View>
 
                     {isClubinho && (
-                        <AppInput
-                            label="Valor mensal do clubinho *"
-                            placeholder="Ex: 120,00"
-                            value={clubinhoMonthlyFee}
-                            onChangeText={(text) => {
-                                const formatted = formatCurrency(text);
-                                setClubinhoMonthlyFee(formatted);
-                                if (errors.clubinhoMonthlyFee) {
-                                    setErrors((prev) => ({ ...prev, clubinhoMonthlyFee: undefined }));
-                                }
-                            }}
-                            error={errors.clubinhoMonthlyFee}
-                            keyboardType="decimal-pad"
-                        />
+                        <>
+                            <AppInput
+                                label="Valor mensal do clubinho *"
+                                placeholder="Ex: 120,00"
+                                value={clubinhoMonthlyFee}
+                                onChangeText={(text) => {
+                                    const formatted = formatCurrency(text);
+                                    setClubinhoMonthlyFee(formatted);
+                                    if (errors.clubinhoMonthlyFee) {
+                                        setErrors((prev) => ({ ...prev, clubinhoMonthlyFee: undefined }));
+                                    }
+                                }}
+                                error={errors.clubinhoMonthlyFee}
+                                keyboardType="decimal-pad"
+                            />
+
+                            <AppInput
+                                label="Dia de vencimento *"
+                                placeholder="Ex: 10"
+                                value={clubinhoDueDay}
+                                onChangeText={(text) => {
+                                    const numericOnly = text.replace(/\D/g, '').slice(0, 2);
+                                    setClubinhoDueDay(numericOnly);
+                                    if (errors.clubinhoDueDay) {
+                                        setErrors((prev) => ({ ...prev, clubinhoDueDay: undefined }));
+                                    }
+                                }}
+                                error={errors.clubinhoDueDay}
+                                keyboardType="number-pad"
+                                maxLength={2}
+                            />
+                        </>
                     )}
 
                     <View style={styles.actions}>
