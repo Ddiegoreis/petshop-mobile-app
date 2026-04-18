@@ -42,7 +42,7 @@ export const HomeScreen = () => {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
             <ScrollView contentContainerStyle={styles.scroll}>
                 <View style={styles.header}>
                     <AppText variant="h1">Gerente Cão Carioca</AppText>
