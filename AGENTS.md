@@ -103,3 +103,13 @@ Antes de concluir mudanças:
 - Não usar bibliotecas externas de UI sem solicitação explícita.
 - Não violar arquitetura local-first.
 - Não alterar regra de negócio sem refletir em service/dao/schema quando necessário.
+
+## 12. Git Workflow (Commit e Push)
+- Separar commits por contexto: cada commit deve representar apenas uma mudança coesa.
+- Não misturar implementações distintas no mesmo commit (ex.: feature A + feature B).
+- Quando houver tipos diferentes de mudança, separar em commits independentes (ex.: `feat`, `test`, `chore`, `docs`, `refactor`).
+- Commits devem ser objetivos e claros, com escopo compreensível pelo histórico do projeto.
+- Mensagens devem seguir Conventional Commits: `type(scope): descrição`.
+- Tipos permitidos (padrão): `feat`, `fix`, `refactor`, `test`, `docs`, `chore`.
+- A descrição do commit deve ser curta, específica e orientada ao resultado (evitar mensagens genéricas).
+- Fazer push apenas quando solicitado explicitamente pelo usuário.
