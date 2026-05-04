@@ -1,0 +1,18 @@
+---
+source_file: "docs/prd.md"
+type: "document"
+community: "Navigation and Screens"
+location: "31-40"
+tags:
+  - graphify/document
+  - graphify/EXTRACTED
+  - community/Navigation_and_Screens
+---
+
+# Agenda / Scheduling
+
+## Connections
+- [[Appointments]] - `references` [EXTRACTED]
+- [[Petshop Mobile App - Product Requirements Document (PRD)]] - `references` [EXTRACTED]
+
+#graphify/document #graphify/EXTRACTED #community/Navigation_and_Screens

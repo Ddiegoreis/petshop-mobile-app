@@ -1,0 +1,8 @@
+/home/diego/www/petshop-mobile-app/src/components/ui/Button.tsx
+/home/diego/www/petshop-mobile-app/src/components/ui/Card.tsx
+/home/diego/www/petshop-mobile-app/src/components/ui/Input.tsx
+/home/diego/www/petshop-mobile-app/src/components/ui/Typography.tsx
+/home/diego/www/petshop-mobile-app/src/services/__tests__/FinanceService.test.ts
+/home/diego/www/petshop-mobile-app/src/services/__tests__/ClientService.test.ts
+/home/diego/www/petshop-mobile-app/android/app/src/main/java/com/diegoreix/petshopmobileapp/MainApplication.kt
+/home/diego/www/petshop-mobile-app/android/app/src/main/java/com/diegoreix/petshopmobileapp/MainActivity.kt

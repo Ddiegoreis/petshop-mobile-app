@@ -39,3 +39,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Graphify
+graphify-out/manifest.json
+graphify-out/cost.json

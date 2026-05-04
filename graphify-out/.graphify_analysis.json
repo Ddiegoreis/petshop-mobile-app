@@ -1,0 +1,623 @@
+{
+  "communities": {
+    "0": [
+      "agents_agenda",
+      "agents_architecture_first",
+      "agents_backup_restore",
+      "agents_business_logic_separation",
+      "agents_clients_and_pets",
+      "agents_design_system",
+      "agents_financas",
+      "agents_fluxo_obrigatorio_de_dados",
+      "agents_local_first",
+      "agents_no_db_directly_in_screens",
+      "agents_objetivo_do_produto",
+      "agents_petshop_project_agent_guidelines",
+      "agents_services_business_rules",
+      "agents_storage_daos_only_data_access",
+      "agents_storage_schemas",
+      "agents_type_safety",
+      "readme_local_first_architecture",
+      "sdd_architecture_overview",
+      "sdd_clientservice",
+      "sdd_data_flow",
+      "sdd_databasebackupservice",
+      "sdd_directory_structure",
+      "sdd_expo_router",
+      "sdd_feature_first_modular_architecture",
+      "sdd_financeservice",
+      "sdd_floating_action_buttons",
+      "sdd_modals",
+      "sdd_nativewind",
+      "sdd_petshop_mobile_app_software_design_document_sdd",
+      "sdd_react_query",
+      "sdd_scheduleservice",
+      "sdd_service_layer",
+      "sdd_storage_layer",
+      "sdd_technology_stack",
+      "sdd_zustand",
+      "usedatabase_usedatabase"
+    ],
+    "1": [
+      "agenda_appointmentdetailscreen_handleupdatestatus",
+      "agenda_appointmentdetailscreen_loadappointment",
+      "clients_clientdetailscreen_handledelete",
+      "clients_clientdetailscreen_load",
+      "home_backupscreen_handleexport",
+      "home_backupscreen_handleimport",
+      "hooks_usetheme_usetheme",
+      "pets_addeditpetscreen_handlesave",
+      "pets_addeditpetscreen_loadowners",
+      "pets_addeditpetscreen_loadpet",
+      "pets_addeditpetscreen_maskdate",
+      "pets_addeditpetscreen_validate",
+      "pets_petdetailscreen_handledelete",
+      "pets_petdetailscreen_load",
+      "pets_petslistscreen_rendercontent",
+      "src_components_ui_button_tsx",
+      "src_components_ui_card_tsx",
+      "src_components_ui_input_tsx",
+      "src_components_ui_typography_tsx",
+      "src_hooks_usetheme_ts",
+      "src_screens_agenda_agendascreen_tsx",
+      "src_screens_agenda_appointmentdetailscreen_tsx",
+      "src_screens_clients_clientdetailscreen_tsx",
+      "src_screens_clients_clientslistscreen_tsx",
+      "src_screens_home_backupscreen_tsx",
+      "src_screens_home_homescreen_tsx",
+      "src_screens_pets_addeditpetscreen_tsx",
+      "src_screens_pets_petdetailscreen_tsx",
+      "src_screens_pets_petslistscreen_tsx",
+      "ui_button_gettextcolor",
+      "ui_button_getvariantstyle",
+      "ui_card_appcard",
+      "ui_input_appinput",
+      "ui_typography_apptext"
+    ],
+    "2": [
+      "addappointmentscreen_addappointmentscreen",
+      "addeditclientscreen_addeditclientscreen",
+      "addeditpetscreen_addeditpetscreen",
+      "agendascreen_agendascreen",
+      "agendastack_agendastack",
+      "app_app",
+      "appnavigator_appnavigator",
+      "appointmentdao_appointmentdao",
+      "appointmentdetailscreen_appointmentdetailscreen",
+      "clientdetailscreen_clientdetailscreen",
+      "clientservice_clientservice",
+      "clientslistscreen_clientslistscreen",
+      "clientsstack_clientsstack",
+      "expensedao_expensedao",
+      "financescreen_financescreen",
+      "financeservice_financeservice",
+      "financestack_financestack",
+      "index_appointments",
+      "index_expenses",
+      "index_owners",
+      "index_payments",
+      "index_pets",
+      "ownerdao_ownerdao",
+      "paymentdao_paymentdao",
+      "petdao_petdao",
+      "petdetailscreen_petdetailscreen",
+      "petslistscreen_petslistscreen",
+      "petsstack_petsstack",
+      "receiptservice_receiptservice",
+      "types_agendastackparamlist",
+      "types_clientsstackparamlist",
+      "types_financestackparamlist",
+      "types_petsstackparamlist",
+      "types_roottabparamlist"
+    ],
+    "3": [
+      "babel_config_inline_import_plugin",
+      "drizzle_config_out",
+      "drizzle_config_schema",
+      "drizzle_migrations_journal",
+      "drizzle_migrations_m0000",
+      "drizzle_migrations_m0001",
+      "drizzle_migrations_m0002",
+      "drizzle_migrations_m0003",
+      "drizzle_migrations_m0004",
+      "drizzle_migrations_m0005",
+      "m0000_appointments_table",
+      "m0000_owners_table",
+      "m0000_payments_table",
+      "m0000_pets_table",
+      "m0001_owners_is_clubinho",
+      "m0002_owners_clubinho_monthly_fee",
+      "m0002_payments_description",
+      "m0002_payments_paid_at",
+      "m0003_payments_receipt_issued_at",
+      "m0004_expenses_table",
+      "m0005_owners_clubinho_due_day"
+    ],
+    "4": [
+      "readme_agenda_inteligente",
+      "readme_backup_restauracao",
+      "readme_clients_and_pets_management",
+      "readme_controlle_financeiro",
+      "readme_dao_pattern",
+      "readme_dark_mode",
+      "readme_design_tokens",
+      "readme_drizzle_orm",
+      "readme_expo",
+      "readme_expo_calendar",
+      "readme_expo_document_picker",
+      "readme_expo_file_system",
+      "readme_expo_sharing",
+      "readme_lucide_react_native",
+      "readme_petshop_mobile_app_gerente_cao_carioca",
+      "readme_react_native",
+      "readme_react_native_calendars",
+      "readme_react_navigation_v7",
+      "readme_sqlite_via_expo_sqlite",
+      "readme_typescript"
+    ],
+    "5": [
+      "hooks_usedatabase_usedatabase",
+      "navigation_appnavigator_appnavigator",
+      "src_app_app",
+      "src_app_tsx",
+      "src_hooks_usedatabase_ts",
+      "src_navigation_appnavigator_tsx",
+      "src_navigation_stacks_agendastack_tsx",
+      "src_navigation_stacks_clientsstack_tsx",
+      "src_navigation_stacks_financestack_tsx",
+      "src_navigation_stacks_homestack_tsx",
+      "src_navigation_stacks_petsstack_tsx",
+      "stacks_agendastack_agendastack",
+      "stacks_clientsstack_clientsstack",
+      "stacks_financestack_financestack",
+      "stacks_homestack_homestack",
+      "stacks_petsstack_petsstack"
+    ],
+    "6": [
+      "agenda_addappointmentscreen_createcalendarevent",
+      "agenda_addappointmentscreen_generateinstances",
+      "agenda_addappointmentscreen_getcalendarid",
+      "agenda_addappointmentscreen_handlesave",
+      "agenda_addappointmentscreen_loadowners",
+      "agenda_addappointmentscreen_loadpets",
+      "agenda_addappointmentscreen_navhelper",
+      "agenda_addappointmentscreen_requestcalendarpermissions",
+      "services_financeservice_addmonths",
+      "services_financeservice_calculatesummary",
+      "services_financeservice_getreferencemonth",
+      "src_screens_agenda_addappointmentscreen_tsx",
+      "src_services_financeservice_ts",
+      "src_services_tests_financeservice_test_ts",
+      "src_services_utils_monthlyduedate_ts",
+      "utils_monthlyduedate_buildmonthlyduedate"
+    ],
+    "7": [
+      "finance_financescreen_confirmreopenpayment",
+      "finance_financescreen_getduedatealert",
+      "finance_financescreen_gocurrentmonth",
+      "finance_financescreen_gonextmonth",
+      "finance_financescreen_goprevmonth",
+      "finance_financescreen_handlecloseservicemodal",
+      "finance_financescreen_handlecreateservicepayment",
+      "finance_financescreen_handlegeneratereceipt",
+      "finance_financescreen_handlemarkasopen",
+      "finance_financescreen_handlemarkaspaid",
+      "finance_financescreen_handleopenexpensemodal",
+      "finance_financescreen_handleopenservicemodal",
+      "finance_financescreen_rendermoney",
+      "finance_financescreen_renderstatus",
+      "src_screens_finance_financescreen_tsx"
+    ],
+    "8": [
+      "agents_ui_premium_e_consistente",
+      "design_system_appbutton",
+      "design_system_appcard",
+      "design_system_appinput",
+      "design_system_apptext",
+      "design_system_color_palette",
+      "design_system_empty_states",
+      "design_system_gerente_cao_carioca",
+      "design_system_icons",
+      "design_system_rounded_corners",
+      "design_system_safe_areas",
+      "design_system_spacing_system",
+      "design_system_ui_layout_principles",
+      "design_system_visual_standards"
+    ],
+    "9": [
+      "prd_agenda_scheduling",
+      "prd_appointments",
+      "prd_backup_restore",
+      "prd_customer_pet_management",
+      "prd_financial_control",
+      "prd_goals",
+      "prd_introduction",
+      "prd_monthly_payments",
+      "prd_non_functional_requirements",
+      "prd_owners",
+      "prd_pets",
+      "prd_petshop_mobile_app_product_requirements_document_prd",
+      "prd_problem_statement",
+      "prd_user_personas"
+    ],
+    "10": [
+      "services_databasebackupservice_cleanupfile",
+      "services_databasebackupservice_extractalldata",
+      "services_databasebackupservice_getcompatibletables",
+      "services_databasebackupservice_getusertablenames",
+      "services_databasebackupservice_pickjsonfile",
+      "services_databasebackupservice_readjsonfile",
+      "services_databasebackupservice_restoredata",
+      "services_databasebackupservice_savejsontocache",
+      "services_databasebackupservice_sharefile",
+      "services_databasebackupservice_validatebackupstructure",
+      "src_services_databasebackupservice_ts"
+    ],
+    "11": [
+      "clients_addeditclientscreen_handlephonechange",
+      "clients_addeditclientscreen_handlesave",
+      "clients_addeditclientscreen_load",
+      "clients_addeditclientscreen_validate",
+      "src_screens_clients_addeditclientscreen_tsx",
+      "src_utils_format_ts",
+      "utils_format_cleanstring",
+      "utils_format_formatcurrency",
+      "utils_format_formatphone"
+    ],
+    "12": [
+      "app_json_expo",
+      "babel_config_preset",
+      "babel_config_reanimated_plugin",
+      "gitignore_expo_android_ios",
+      "index_ts_root_component",
+      "metro_config_default_config",
+      "package_json_dependencies",
+      "package_json_main",
+      "package_json_test_script"
+    ],
+    "13": [
+      "services_clientservice_ensurecurrentmonthclubinhoifneeded",
+      "services_clientservice_hasfeechanged",
+      "services_clientservice_nextreferencemonth",
+      "services_clientservice_normalizeinput",
+      "src_services_clientservice_ts",
+      "src_services_tests_clientservice_test_ts",
+      "src_services_utils_clubinho_ts",
+      "utils_clubinho_normalizedueday"
+    ],
+    "14": [
+      "services_receiptservice_buildreceipthtml",
+      "services_receiptservice_escapehtml",
+      "services_receiptservice_formatcurrency",
+      "services_receiptservice_formatdatetime",
+      "services_receiptservice_formatpaymentdateforfile",
+      "services_receiptservice_resolvelogouri",
+      "services_receiptservice_sanitizefilepart",
+      "src_services_receiptservice_ts"
+    ],
+    "15": [
+      "android_app_src_main_java_com_diegoreix_petshopmobileapp_mainapplication_kt",
+      "petshopmobileapp_mainapplication_getjsmainmodulename",
+      "petshopmobileapp_mainapplication_getpackages",
+      "petshopmobileapp_mainapplication_getusedevelopersupport",
+      "petshopmobileapp_mainapplication_mainapplication",
+      "petshopmobileapp_mainapplication_mainapplication_onconfigurationchanged",
+      "petshopmobileapp_mainapplication_mainapplication_oncreate"
+    ],
+    "16": [
+      "android_app_src_main_java_com_diegoreix_petshopmobileapp_mainactivity_kt",
+      "petshopmobileapp_mainactivity_mainactivity",
+      "petshopmobileapp_mainactivity_mainactivity_createreactactivitydelegate",
+      "petshopmobileapp_mainactivity_mainactivity_getmaincomponentname",
+      "petshopmobileapp_mainactivity_mainactivity_invokedefaultonbackpressed",
+      "petshopmobileapp_mainactivity_mainactivity_oncreate"
+    ],
+    "17": [
+      "backupscreen_backupscreen",
+      "connection_db",
+      "databasebackupservice_databasebackupservice",
+      "homescreen_homescreen",
+      "homestack_homestack",
+      "types_homestackparamlist"
+    ],
+    "18": [
+      "ic_launcher_xxxhdpi_petshop_cao_carioca_logo",
+      "icon_petshop_cao_carioca_logo",
+      "splash_icon_petshop_cao_carioca_logo",
+      "splashscreen_logo_xxxhdpi_petshop_cao_carioca_logo"
+    ],
+    "19": [
+      "agent_evals_agent_py",
+      "agent_evals_evals_py",
+      "agent_evals_readme"
+    ],
+    "20": [
+      "colors_colors",
+      "usetheme_usetheme"
+    ],
+    "21": [
+      "clubinho_normalizedueday",
+      "monthlyduedate_buildmonthlyduedate"
+    ],
+    "22": [
+      "format_formatcurrency",
+      "format_formatphone"
+    ],
+    "23": [
+      "package_json_devdependencies",
+      "tsconfig_strict"
+    ],
+    "24": [
+      "src_constants_colors_ts"
+    ],
+    "25": [
+      "src_navigation_types_ts"
+    ],
+    "26": [
+      "src_storage_daos_appointmentdao_ts"
+    ],
+    "27": [
+      "src_storage_daos_ownerdao_ts"
+    ],
+    "28": [
+      "src_storage_daos_paymentdao_ts"
+    ],
+    "29": [
+      "src_storage_daos_petdao_ts"
+    ],
+    "30": [
+      "src_storage_daos_expensedao_ts"
+    ],
+    "31": [
+      "src_storage_database_connection_ts"
+    ],
+    "32": [
+      "src_storage_schema_index_ts"
+    ],
+    "33": [
+      "format_cleanstring"
+    ],
+    "34": [
+      "ic_launcher_xxxhdpi_foreground_petshop_cao_carioca_logo"
+    ],
+    "35": [
+      "ic_launcher_xxhdpi_petshop_cao_carioca_logo"
+    ],
+    "36": [
+      "ic_launcher_xxhdpi_foreground_petshop_cao_carioca_logo"
+    ],
+    "37": [
+      "ic_launcher_xhdpi_petshop_cao_carioca_logo"
+    ],
+    "38": [
+      "ic_launcher_xhdpi_foreground_petshop_cao_carioca_logo"
+    ],
+    "39": [
+      "ic_launcher_mdpi_petshop_cao_carioca_logo"
+    ],
+    "40": [
+      "ic_launcher_mdpi_foreground_petshop_cao_carioca_logo"
+    ],
+    "41": [
+      "ic_launcher_hdpi_petshop_cao_carioca_logo"
+    ],
+    "42": [
+      "ic_launcher_hdpi_foreground_petshop_cao_carioca_logo"
+    ],
+    "43": [
+      "splashscreen_logo_xxhdpi_petshop_cao_carioca_logo"
+    ],
+    "44": [
+      "splashscreen_logo_xhdpi_petshop_cao_carioca_logo"
+    ],
+    "45": [
+      "splashscreen_logo_mdpi_petshop_cao_carioca_logo"
+    ],
+    "46": [
+      "splashscreen_logo_hdpi_petshop_cao_carioca_logo"
+    ],
+    "47": [
+      "drizzle_config_dialect"
+    ],
+    "48": [
+      "drizzle_config_driver"
+    ]
+  },
+  "cohesion": {
+    "0": 0.06,
+    "1": 0.1,
+    "2": 0.11,
+    "3": 0.16,
+    "4": 0.1,
+    "5": 0.13,
+    "6": 0.17,
+    "7": 0.15,
+    "8": 0.15,
+    "9": 0.14,
+    "10": 0.2,
+    "11": 0.31,
+    "12": 0.22,
+    "13": 0.29,
+    "14": 0.36,
+    "15": 0.29,
+    "16": 0.33,
+    "17": 0.33,
+    "18": 0.5,
+    "19": 0.67,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0
+  },
+  "gods": [
+    {
+      "id": "hooks_usetheme_usetheme",
+      "label": "useTheme()",
+      "degree": 22
+    },
+    {
+      "id": "readme_petshop_mobile_app_gerente_cao_carioca",
+      "label": "Petshop Mobile App - Gerente C\u00e3o Carioca",
+      "degree": 20
+    },
+    {
+      "id": "ui_typography_apptext",
+      "label": "AppText()",
+      "degree": 17
+    },
+    {
+      "id": "agents_petshop_project_agent_guidelines",
+      "label": "Petshop Project - Agent Guidelines",
+      "degree": 12
+    },
+    {
+      "id": "ui_card_appcard",
+      "label": "AppCard()",
+      "degree": 10
+    },
+    {
+      "id": "ownerdao_ownerdao",
+      "label": "Owner DAO",
+      "degree": 9
+    },
+    {
+      "id": "prd_petshop_mobile_app_product_requirements_document_prd",
+      "label": "Petshop Mobile App - Product Requirements Document (PRD)",
+      "degree": 9
+    },
+    {
+      "id": "clientsstack_clientsstack",
+      "label": "Clients Stack",
+      "degree": 8
+    },
+    {
+      "id": "design_system_gerente_cao_carioca",
+      "label": "Design System - Gerente C\u00e3o Carioca",
+      "degree": 8
+    },
+    {
+      "id": "sdd_petshop_mobile_app_software_design_document_sdd",
+      "label": "Petshop Mobile App - Software Design Document (SDD)",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "babel-preset-expo",
+      "target": "Expo app config",
+      "source_files": [
+        "babel.config.js",
+        "app.json"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `babel-preset-expo` unexpectedly reaches hub `Expo app config`"
+    },
+    {
+      "source": "Expo Metro default config",
+      "target": "Expo app config",
+      "source_files": [
+        "metro.config.js",
+        "app.json"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Expo Metro default config` unexpectedly reaches hub `Expo app config`"
+    },
+    {
+      "source": "App root component registration",
+      "target": "Expo app config",
+      "source_files": [
+        "index.ts",
+        "app.json"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 code); connects across different repos/directories; peripheral node `App root component registration` unexpectedly reaches hub `Expo app config`"
+    },
+    {
+      "source": "useDatabase",
+      "target": "Storage Layer",
+      "source_files": [
+        "src/hooks/useDatabase.ts",
+        "docs/sdd.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories"
+    },
+    {
+      "source": "Petshop C\u00e3o Carioca logo",
+      "target": "Petshop C\u00e3o Carioca launcher icon xxxhdpi",
+      "source_files": [
+        "assets/image/icon.png",
+        "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "semantically_similar_to",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; semantically similar concepts with no structural link"
+    }
+  ],
+  "questions": [
+    {
+      "type": "ambiguous_edge",
+      "question": "What is the exact relationship between `agent_evals README` and `agent_evals evals.py`?",
+      "why": "Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low."
+    },
+    {
+      "type": "ambiguous_edge",
+      "question": "What is the exact relationship between `agent_evals README` and `agent_evals agent.py`?",
+      "why": "Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `useTheme()` connect `Community 1` to `Community 11`, `Community 5`, `Community 6`, `Community 7`?",
+      "why": "High betweenness centrality (0.036) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Petshop Project - Agent Guidelines` connect `Community 0` to `Community 8`?",
+      "why": "High betweenness centrality (0.028) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 4 inferred relationships involving `useTheme()` (e.g. with `AppCard()` and `AppInput()`) actually correct?",
+      "why": "`useTheme()` has 4 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `App`, `Colors`, `useDatabase` to the rest of the system?",
+      "why": "106 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.06 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
